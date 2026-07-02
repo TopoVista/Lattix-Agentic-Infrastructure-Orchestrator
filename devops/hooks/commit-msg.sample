@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+# Install with:
+#   pre-commit install --hook-type commit-msg
+#
+# The active commit-msg validation is defined in .pre-commit-config.yaml and commitlint.config.cjs.
