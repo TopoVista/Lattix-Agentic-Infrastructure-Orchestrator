@@ -1,0 +1,104 @@
+# Operating systems
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors and IDEs
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+
+# Logs and reports
+*.log
+*.md
+logs/
+reports/
+coverage/
+test-results/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.kubeconfig
+kubeconfig
+terraform.tfstate
+terraform.tfstate.*
+*.tfvars
+*.tfvars.json
+
+# Node and TypeScript
+node_modules/
+.pnpm-store/
+dist/
+build/
+.next/
+out/
+storybook-static/
+*.tsbuildinfo
+
+# Java and Gradle
+.gradle/
+**/build/
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+dist/
+*.egg-info/
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Kubernetes and Helm
+*.kubeconfig
+charts/**/charts/
+charts/**/tmpcharts/
+*.tgz
+
+# Data and local artifacts
+.cache/
+.tmp/
+tmp/
+artifacts/
+*.sqlite
+*.db
+*.duckdb
+*.parquet
+*.arrow
+
+# ML artifacts
+mlruns/
+wandb/
+checkpoints/
+models/
+
+# Generated clients and local outputs
+generated/
+.generated/
