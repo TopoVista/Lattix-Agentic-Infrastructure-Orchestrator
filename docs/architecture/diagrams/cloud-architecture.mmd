@@ -1,0 +1,48 @@
+flowchart TB
+  Internet[Internet]
+  DNS[Route 53 / DNS]
+  CDN[CloudFront / CDN]
+  ALB[Application Load Balancer]
+
+  subgraph VPC[AWS VPC]
+    subgraph Public[Public Subnets]
+      NAT[NAT Gateway]
+      ALB
+    end
+
+    subgraph Private[Private App Subnets]
+      EKS[EKS Cluster]
+      Gateway[API Gateway Pods]
+      Services[Core Service Pods]
+      Agents[Agent and AI Pods]
+      Workers[Worker Pods]
+    end
+
+    subgraph Data[Private Data Subnets]
+      RDS[(RDS PostgreSQL)]
+      Redis[(ElastiCache Redis)]
+      Kafka[(MSK / Kafka)]
+    end
+  end
+
+  S3[(S3 Buckets)]
+  ECR[(ECR)]
+  KMS[KMS]
+  Secrets[Secrets Manager]
+  CloudWatch[CloudWatch]
+
+  Internet --> DNS
+  DNS --> CDN
+  CDN --> ALB
+  ALB --> Gateway
+  Gateway --> Services
+  Services --> RDS
+  Services --> Redis
+  Services --> Kafka
+  Agents --> Services
+  Agents --> S3
+  Workers --> Kafka
+  EKS --> ECR
+  Services --> Secrets
+  Services --> KMS
+  EKS --> CloudWatch

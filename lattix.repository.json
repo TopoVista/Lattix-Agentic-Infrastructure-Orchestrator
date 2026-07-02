@@ -1,0 +1,235 @@
+{
+  "name": "lattix",
+  "version": "0.1.0",
+  "phase": "01-repository-setup",
+  "languages": {
+    "java": {
+      "packagePrefix": "com.lattix",
+      "workspace": "settings.gradle.kts"
+    },
+    "typescript": {
+      "packageScope": "@lattix",
+      "workspace": "pnpm-workspace.yaml"
+    },
+    "python": {
+      "packagePrefix": "lattix_",
+      "workspace": "pyproject.toml"
+    },
+    "infrastructure": {
+      "terraformRoot": "terraform",
+      "kubernetesRoot": "kubernetes"
+    }
+  },
+  "modules": [
+    {
+      "path": "frontend",
+      "type": "application",
+      "runtime": "node",
+      "owner": "product-engineering",
+      "phaseStart": 10,
+      "publicInterfaces": ["web routes", "typed API clients"]
+    },
+    {
+      "path": "mobile",
+      "type": "application",
+      "runtime": "node",
+      "owner": "product-engineering",
+      "phaseStart": 39,
+      "publicInterfaces": ["mobile client contracts"]
+    },
+    {
+      "path": "gateway",
+      "type": "edge",
+      "runtime": "java",
+      "owner": "platform-engineering",
+      "phaseStart": 6,
+      "publicInterfaces": ["REST API gateway", "routing policy"]
+    },
+    {
+      "path": "services",
+      "type": "backend",
+      "runtime": "java",
+      "owner": "backend-platform",
+      "phaseStart": 5,
+      "publicInterfaces": ["service APIs", "domain events"]
+    },
+    {
+      "path": "shared",
+      "type": "shared",
+      "runtime": "mixed",
+      "owner": "platform-engineering",
+      "phaseStart": 1,
+      "publicInterfaces": ["contracts", "schemas", "generated clients", "shared utilities"]
+    },
+    {
+      "path": "agents",
+      "type": "agent-platform",
+      "runtime": "python",
+      "owner": "ai-platform",
+      "phaseStart": 16,
+      "publicInterfaces": ["agent contracts", "task lifecycle"]
+    },
+    {
+      "path": "ai-platform",
+      "type": "ai-services",
+      "runtime": "python",
+      "owner": "ai-platform",
+      "phaseStart": 12,
+      "publicInterfaces": ["repository intelligence", "chat", "code generation"]
+    },
+    {
+      "path": "memory",
+      "type": "memory-platform",
+      "runtime": "python",
+      "owner": "ai-platform",
+      "phaseStart": 15,
+      "publicInterfaces": ["memory APIs", "embedding records"]
+    },
+    {
+      "path": "knowledge-graph",
+      "type": "graph-platform",
+      "runtime": "python",
+      "owner": "data-platform",
+      "phaseStart": 14,
+      "publicInterfaces": ["graph schema", "graph query API"]
+    },
+    {
+      "path": "ml-platform",
+      "type": "ml-platform",
+      "runtime": "python",
+      "owner": "ml-platform",
+      "phaseStart": 21,
+      "publicInterfaces": ["model registry", "prediction APIs"]
+    },
+    {
+      "path": "vision",
+      "type": "ai-services",
+      "runtime": "python",
+      "owner": "ai-platform",
+      "phaseStart": 22,
+      "publicInterfaces": ["vision processing APIs"]
+    },
+    {
+      "path": "signal-processing",
+      "type": "ai-services",
+      "runtime": "python",
+      "owner": "ai-platform",
+      "phaseStart": 23,
+      "publicInterfaces": ["audio and signal APIs"]
+    },
+    {
+      "path": "observability",
+      "type": "platform",
+      "runtime": "infrastructure",
+      "owner": "sre",
+      "phaseStart": 26,
+      "publicInterfaces": ["dashboards", "alerts", "telemetry conventions"]
+    },
+    {
+      "path": "cloud",
+      "type": "platform",
+      "runtime": "mixed",
+      "owner": "platform-engineering",
+      "phaseStart": 3,
+      "publicInterfaces": ["cloud adapters", "cloud controllers"]
+    },
+    {
+      "path": "terraform",
+      "type": "infrastructure",
+      "runtime": "terraform",
+      "owner": "platform-engineering",
+      "phaseStart": 3,
+      "publicInterfaces": ["modules", "environment roots"]
+    },
+    {
+      "path": "kubernetes",
+      "type": "infrastructure",
+      "runtime": "kubernetes",
+      "owner": "platform-engineering",
+      "phaseStart": 4,
+      "publicInterfaces": ["helm charts", "manifests", "policies"]
+    },
+    {
+      "path": "docs",
+      "type": "documentation",
+      "runtime": "markdown",
+      "owner": "all-teams",
+      "phaseStart": 0,
+      "publicInterfaces": ["product docs", "architecture docs", "implementation plans"]
+    },
+    {
+      "path": "scripts",
+      "type": "developer-tooling",
+      "runtime": "mixed",
+      "owner": "developer-experience",
+      "phaseStart": 1,
+      "publicInterfaces": ["local scripts", "validation scripts"]
+    },
+    {
+      "path": "devops",
+      "type": "operations",
+      "runtime": "mixed",
+      "owner": "sre",
+      "phaseStart": 2,
+      "publicInterfaces": ["ci/cd", "release", "security scans", "runbooks"]
+    },
+    {
+      "path": "benchmarks",
+      "type": "quality",
+      "runtime": "mixed",
+      "owner": "performance-engineering",
+      "phaseStart": 37,
+      "publicInterfaces": ["benchmark scenarios", "capacity reports"]
+    },
+    {
+      "path": "tests",
+      "type": "quality",
+      "runtime": "mixed",
+      "owner": "quality-engineering",
+      "phaseStart": 2,
+      "publicInterfaces": ["fixtures", "contract tests", "e2e tests"]
+    },
+    {
+      "path": "sdk",
+      "type": "developer-interface",
+      "runtime": "mixed",
+      "owner": "developer-experience",
+      "phaseStart": 39,
+      "publicInterfaces": ["typescript sdk", "java sdk", "python sdk"]
+    },
+    {
+      "path": "cli",
+      "type": "developer-interface",
+      "runtime": "node",
+      "owner": "developer-experience",
+      "phaseStart": 39,
+      "publicInterfaces": ["lattix cli commands"]
+    }
+  ],
+  "boundaryRules": [
+    {
+      "source": "frontend",
+      "allowedTargets": ["shared", "sdk"],
+      "forbiddenTargets": ["services", "agents", "ai-platform", "terraform", "kubernetes"],
+      "enforcement": "documented"
+    },
+    {
+      "source": "services",
+      "allowedTargets": ["shared"],
+      "forbiddenTargets": ["frontend", "agents", "ai-platform"],
+      "enforcement": "documented"
+    },
+    {
+      "source": "agents",
+      "allowedTargets": ["shared", "ai-platform", "memory", "knowledge-graph"],
+      "forbiddenTargets": ["frontend", "terraform", "kubernetes"],
+      "enforcement": "documented"
+    },
+    {
+      "source": "terraform",
+      "allowedTargets": ["cloud"],
+      "forbiddenTargets": ["frontend", "services", "agents"],
+      "enforcement": "documented"
+    }
+  ]
+}

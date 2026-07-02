@@ -1,0 +1,70 @@
+classDiagram
+  class Tenant {
+    +UUID id
+    +string name
+    +string status
+  }
+
+  class Workspace {
+    +UUID id
+    +UUID tenantId
+    +string name
+    +string slug
+    +string status
+  }
+
+  class User {
+    +UUID id
+    +string email
+    +string displayName
+    +string status
+  }
+
+  class Repository {
+    +UUID id
+    +UUID workspaceId
+    +string provider
+    +string url
+    +string defaultBranch
+    +string status
+  }
+
+  class AgentTask {
+    +UUID id
+    +UUID workspaceId
+    +string goal
+    +string status
+    +string riskLevel
+  }
+
+  class ApprovalRequest {
+    +UUID id
+    +UUID taskId
+    +string action
+    +string riskLevel
+    +string status
+  }
+
+  class ToolInvocation {
+    +UUID id
+    +UUID taskId
+    +string toolName
+    +string status
+    +string riskLevel
+  }
+
+  class AuditEvent {
+    +UUID id
+    +string actorType
+    +string actorId
+    +string action
+    +string resourceType
+  }
+
+  Tenant "1" --> "*" Workspace
+  Workspace "*" --> "*" User : members
+  Workspace "1" --> "*" Repository
+  Workspace "1" --> "*" AgentTask
+  AgentTask "1" --> "*" ApprovalRequest
+  AgentTask "1" --> "*" ToolInvocation
+  Workspace "1" --> "*" AuditEvent

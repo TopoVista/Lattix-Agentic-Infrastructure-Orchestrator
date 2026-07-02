@@ -1,0 +1,58 @@
+flowchart TB
+  Browser[Browser Workspace]
+  CDN[CDN]
+  Gateway[API Gateway]
+
+  subgraph Kubernetes[Kubernetes Cluster]
+    Frontend[Next.js Frontend]
+    CoreServices[Spring Boot Core Services]
+    AgentRuntime[Agent Runtime]
+    AIServices[AI / Repository Intelligence Services]
+    ToolGateway[MCP Tool Gateway]
+    Workers[Workers and Schedulers]
+    OTel[OpenTelemetry Collector]
+  end
+
+  subgraph DataStores[Data Stores]
+    Postgres[(PostgreSQL)]
+    Redis[(Redis)]
+    Kafka[(Kafka)]
+    Neo4j[(Neo4j)]
+    Qdrant[(Qdrant)]
+    ClickHouse[(ClickHouse)]
+    OpenSearch[(OpenSearch)]
+    ObjectStorage[(S3 / MinIO)]
+  end
+
+  subgraph External[External Systems]
+    Git[Git Providers]
+    Cloud[Cloud Providers]
+    K8sAPI[Kubernetes APIs]
+    CICD[CI/CD]
+    Obs[Observability Tools]
+    SaaS[SaaS Tools]
+    LLM[Model Providers]
+  end
+
+  Browser --> CDN
+  Browser --> Gateway
+  CDN --> Frontend
+  Gateway --> CoreServices
+  Gateway --> AgentRuntime
+  Gateway --> AIServices
+  CoreServices --> Postgres
+  CoreServices --> Redis
+  CoreServices --> Kafka
+  AgentRuntime --> Redis
+  AgentRuntime --> Postgres
+  AgentRuntime --> ToolGateway
+  AgentRuntime --> AIServices
+  AIServices --> Neo4j
+  AIServices --> Qdrant
+  AIServices --> OpenSearch
+  AIServices --> ObjectStorage
+  Workers --> Kafka
+  Workers --> ClickHouse
+  ToolGateway --> External
+  OTel --> Obs
+  Kubernetes --> DataStores

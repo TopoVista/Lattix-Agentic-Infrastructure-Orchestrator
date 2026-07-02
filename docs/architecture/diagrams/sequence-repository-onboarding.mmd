@@ -1,0 +1,30 @@
+sequenceDiagram
+  autonumber
+  actor User
+  participant UI as Frontend Workspace
+  participant Gateway as API Gateway
+  participant Repo as Repository Service
+  participant Secrets as Secret Provider
+  participant Kafka as Kafka
+  participant Indexer as Repository Indexer
+  participant Search as OpenSearch
+  participant Graph as Knowledge Graph
+  participant Audit as Audit Service
+
+  User->>UI: Add repository provider, URL, branch
+  UI->>Gateway: POST /api/v1/repositories
+  Gateway->>Gateway: Validate token and workspace
+  Gateway->>Repo: Create repository
+  Repo->>Secrets: Store credential reference
+  Repo->>Audit: Record repository.registered
+  Repo->>Kafka: Publish repository.registered
+  Repo->>Kafka: Publish repository.index_requested
+  Repo-->>Gateway: Repository created
+  Gateway-->>UI: Repository status: indexing
+  Kafka-->>Indexer: Consume index request
+  Indexer->>Indexer: Clone snapshot and parse files
+  Indexer->>Search: Write file and symbol index
+  Indexer->>Graph: Upsert code facts
+  Indexer->>Kafka: Publish repository.index_completed
+  UI->>Gateway: Poll or stream index status
+  Gateway-->>UI: Repository status: indexed

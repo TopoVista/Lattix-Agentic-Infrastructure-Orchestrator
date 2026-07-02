@@ -1,0 +1,52 @@
+flowchart LR
+  subgraph UI[Frontend Workspace]
+    Dashboard[Dashboard]
+    RepoBrowser[Repository Browser]
+    Editor[Intelligent Editor]
+    ChatUI[Chat UI]
+    TaskBoard[Task Board]
+    OpsViews[Operations Views]
+  end
+
+  subgraph Edge[Edge Layer]
+    Gateway[API Gateway]
+    AuthFilter[Auth Filter]
+    RateLimit[Rate Limit]
+    TraceFilter[Trace Filter]
+  end
+
+  subgraph Core[Core Backend]
+    Auth[Auth Service]
+    Workspace[Workspace Service]
+    Repository[Repository Service]
+    Project[Project Service]
+    Document[Document Service]
+    Audit[Audit Service]
+    Notification[Notification Service]
+  end
+
+  subgraph Intelligence[Intelligence Platform]
+    RepoIntel[Repository Intelligence]
+    Knowledge[Knowledge Graph]
+    Memory[Memory Service]
+    Chat[Chat Pipeline]
+    Agents[Agent Runtime]
+    Tools[MCP Tool Gateway]
+    Twin[Digital Twin]
+  end
+
+  subgraph Ops[Operations Platform]
+    CICD[CI/CD Platform]
+    CloudControllers[Cloud Controllers]
+    Observability[Observability]
+    Cost[Cost Optimization]
+    Compliance[Compliance]
+  end
+
+  UI --> Gateway
+  Gateway --> Core
+  Gateway --> Intelligence
+  Gateway --> Ops
+  Core --> Intelligence
+  Intelligence --> Ops
+  Ops --> Intelligence

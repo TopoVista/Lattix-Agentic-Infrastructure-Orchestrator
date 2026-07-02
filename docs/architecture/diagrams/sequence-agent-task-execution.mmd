@@ -1,0 +1,37 @@
+sequenceDiagram
+  autonumber
+  actor User
+  participant UI as Frontend Workspace
+  participant Gateway as API Gateway
+  participant Runtime as Agent Runtime
+  participant Planner as Planner Agent
+  participant Scheduler as Scheduler
+  participant Tools as MCP Tool Gateway
+  participant Approval as Approval Service
+  participant Eval as Evaluation Engine
+  participant Audit as Audit Service
+
+  User->>UI: Request agent task
+  UI->>Gateway: POST /api/v1/agents/tasks
+  Gateway->>Runtime: Create task
+  Runtime->>Audit: Record task.created
+  Runtime->>Planner: Plan task graph
+  Planner-->>Runtime: Task graph with risk and tools
+  Runtime->>Scheduler: Schedule next step
+  Scheduler-->>Runtime: Step selected
+  Runtime->>Tools: Request tool invocation
+  Tools->>Tools: Classify risk and check policy
+  alt Approval required
+    Tools->>Approval: Create approval request
+    Approval-->>UI: Notify pending approval
+    User->>UI: Approve or reject
+    UI->>Gateway: POST approval decision
+    Gateway->>Approval: Store decision
+    Approval-->>Tools: Decision
+  end
+  Tools-->>Runtime: Tool result
+  Runtime->>Eval: Evaluate result
+  Eval-->>Runtime: Evaluation report
+  Runtime->>Audit: Record task outcome
+  Runtime-->>Gateway: Task result
+  Gateway-->>UI: Stream progress and final result

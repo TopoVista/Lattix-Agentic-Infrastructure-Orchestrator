@@ -1,0 +1,38 @@
+flowchart LR
+  PlatformEngineer[Platform Engineer]
+  SoftwareEngineer[Software Engineer]
+  SRE[SRE / DevOps Engineer]
+  SecurityEngineer[Security Engineer]
+  Leader[Engineering Leader]
+
+  Lattix[Lattix Platform]
+
+  Git[GitHub / GitLab]
+  Jira[Jira]
+  Chat[Slack / Discord]
+  Docs[Drive / OneDrive / Dropbox]
+  Figma[Figma]
+  Cloud[AWS / GCP / Azure]
+  K8s[Kubernetes]
+  Terraform[Terraform]
+  CICD[GitHub Actions / Jenkins / ArgoCD]
+  Obs[Prometheus / Grafana / Sentry / Logs / Traces]
+  ModelProvider[LLM / Embedding Providers]
+
+  PlatformEngineer --> Lattix
+  SoftwareEngineer --> Lattix
+  SRE --> Lattix
+  SecurityEngineer --> Lattix
+  Leader --> Lattix
+
+  Lattix <--> Git
+  Lattix <--> Jira
+  Lattix <--> Chat
+  Lattix <--> Docs
+  Lattix <--> Figma
+  Lattix <--> Cloud
+  Lattix <--> K8s
+  Lattix <--> Terraform
+  Lattix <--> CICD
+  Lattix <--> Obs
+  Lattix <--> ModelProvider

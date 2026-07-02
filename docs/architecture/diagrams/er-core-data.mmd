@@ -1,0 +1,64 @@
+erDiagram
+  TENANTS ||--o{ WORKSPACES : contains
+  USERS ||--o{ EXTERNAL_IDENTITIES : has
+  USERS ||--o{ SESSIONS : has
+  USERS ||--o{ ROLE_ASSIGNMENTS : receives
+  WORKSPACES ||--o{ WORKSPACE_MEMBERS : has
+  USERS ||--o{ WORKSPACE_MEMBERS : joins
+  WORKSPACES ||--o{ REPOSITORIES : owns
+  REPOSITORIES ||--o{ REPOSITORY_SNAPSHOTS : has
+  REPOSITORIES ||--o{ REPOSITORY_INDEX_JOBS : indexes
+  WORKSPACES ||--o{ PROJECTS : contains
+  PROJECTS ||--o{ TASKS : has
+  WORKSPACES ||--o{ AGENT_TASKS : has
+  AGENT_TASKS ||--o{ AGENT_TASK_STEPS : contains
+  AGENT_TASKS ||--o{ AGENT_TOOL_CALLS : uses
+  AGENT_TASKS ||--o{ APPROVAL_REQUESTS : may_require
+  APPROVAL_REQUESTS ||--o{ APPROVAL_DECISIONS : receives
+  WORKSPACES ||--o{ CONVERSATIONS : has
+  CONVERSATIONS ||--o{ CONVERSATION_MESSAGES : contains
+  WORKSPACES ||--o{ MEMORY_RECORDS : has
+  WORKSPACES ||--o{ AUDIT_EVENTS : records
+
+  TENANTS {
+    uuid id
+    string name
+    string status
+  }
+  WORKSPACES {
+    uuid id
+    uuid tenant_id
+    string name
+    string slug
+    string status
+  }
+  USERS {
+    uuid id
+    string email
+    string display_name
+    string status
+  }
+  REPOSITORIES {
+    uuid id
+    uuid workspace_id
+    string provider
+    string url
+    string default_branch
+    string status
+  }
+  AGENT_TASKS {
+    uuid id
+    uuid workspace_id
+    uuid created_by_user_id
+    string goal
+    string status
+    string risk_level
+  }
+  AUDIT_EVENTS {
+    uuid id
+    uuid tenant_id
+    uuid workspace_id
+    string actor_type
+    string action
+    string resource_type
+  }

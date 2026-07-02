@@ -1,0 +1,39 @@
+flowchart TB
+  UserGoal[User Goal]
+  Supervisor[Supervisor Agent]
+  Planner[Planner Agent]
+  Decomposer[Task Decomposer]
+  Scheduler[Scheduler]
+  Router[Routing Agent]
+  Specialist[Specialist Role Agents]
+  Memory[Memory Agent]
+  Knowledge[Knowledge Agent]
+  ToolAgent[Tool Agent]
+  Approval[Human Approval Agent]
+  Reviewer[Reviewer Agent]
+  Critic[Critic Agent]
+  Evaluation[Evaluation Engine]
+  Recovery[Recovery Agent]
+  Learning[Learning Agent]
+  Result[Evidence-Backed Result]
+
+  UserGoal --> Supervisor
+  Supervisor --> Planner
+  Planner --> Decomposer
+  Decomposer --> Scheduler
+  Scheduler --> Router
+  Router --> Specialist
+  Specialist --> Memory
+  Specialist --> Knowledge
+  Specialist --> ToolAgent
+  ToolAgent --> Approval
+  Approval --> ToolAgent
+  ToolAgent --> Specialist
+  Specialist --> Reviewer
+  Reviewer --> Critic
+  Critic --> Evaluation
+  Evaluation -->|pass| Result
+  Evaluation -->|fail| Recovery
+  Recovery --> Scheduler
+  Result --> Learning
+  Learning --> Memory
