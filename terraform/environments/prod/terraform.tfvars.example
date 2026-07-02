@@ -1,0 +1,13 @@
+settings = {
+  region                     = "us-east-1"
+  owner                      = "platform-engineering"
+  cost_center                = "engineering"
+  github_repository          = "replace-owner/lattix"
+  budget_alert_email         = "cloud-alerts@example.com"
+  domain_name                = "lattix.example.com"
+  hosted_zone_id             = "Z0000000000000000000"
+  alb_certificate_arn        = "arn:aws:acm:us-east-1:123456789012:certificate/replace-me"
+  cloudfront_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/replace-me"
+  operator_principal_arns    = ["arn:aws:iam::123456789012:role/PlatformEngineer"]
+  admin_principal_arns       = ["arn:aws:iam::123456789012:role/ProductionAdministrator"]
+}

@@ -1,0 +1,6 @@
+settings = {
+  region            = "us-east-1"
+  owner             = "platform-engineering"
+  cost_center       = "engineering"
+  github_repository = "replace-owner/lattix"
+}

@@ -1,0 +1,5 @@
+region            = "us-east-1"
+state_bucket_name = "replace-with-globally-unique-lattix-terraform-state"
+lock_table_name   = "lattix-terraform-locks"
+owner             = "platform-engineering"
+cost_center       = "engineering"

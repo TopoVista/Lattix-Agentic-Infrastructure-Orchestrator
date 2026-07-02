@@ -1,0 +1,6 @@
+bucket         = "replace-lattix-terraform-state"
+key            = "environments/local/terraform.tfstate"
+region         = "us-east-1"
+dynamodb_table = "lattix-terraform-locks"
+encrypt        = true
+kms_key_id     = "alias/lattix-terraform-state"

@@ -1,0 +1,8 @@
+settings = {
+  region                  = "us-east-1"
+  owner                   = "platform-engineering"
+  cost_center             = "engineering"
+  github_repository       = "replace-owner/lattix"
+  budget_alert_email      = "cloud-alerts@example.com"
+  operator_principal_arns = ["arn:aws:iam::123456789012:role/PlatformEngineer"]
+}
