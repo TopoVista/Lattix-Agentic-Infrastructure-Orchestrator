@@ -1,0 +1,19 @@
+schemaVersion: 1
+organization: replace-organization-id
+environments:
+  dev:
+    accountId: "111111111111"
+    region: us-east-1
+  staging:
+    accountId: "222222222222"
+    region: us-east-1
+  prod:
+    accountId: "333333333333"
+    region: us-east-1
+guardrails:
+  requireMfaForHumans: true
+  denyPublicObjectStorage: true
+  requireEncryptedStorage: true
+  allowedRegions:
+    - us-east-1
+    - us-west-2

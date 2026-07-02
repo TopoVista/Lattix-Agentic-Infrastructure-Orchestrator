@@ -1,0 +1,17 @@
+schemaVersion: 1
+status: planned
+provider: azure
+moduleContract: terraform/modules/provider-abstractions
+requiredInputs:
+  - project_name
+  - environment
+  - region
+  - owner
+  - cost_center
+requiredCapabilities:
+  - network
+  - identity
+  - data
+  - kubernetes
+  - edge
+  - observability

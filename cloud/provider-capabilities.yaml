@@ -1,0 +1,39 @@
+schemaVersion: 1
+capabilities:
+  network:
+    aws: VPC
+    gcp: VPC Network
+    azure: Virtual Network
+  kubernetes:
+    aws: EKS
+    gcp: GKE
+    azure: AKS
+  relationalDatabase:
+    aws: RDS PostgreSQL
+    gcp: Cloud SQL PostgreSQL
+    azure: Azure Database for PostgreSQL
+  cache:
+    aws: ElastiCache Redis
+    gcp: Memorystore Redis
+    azure: Azure Cache for Redis
+  eventStreaming:
+    aws: MSK
+    gcp: Managed Service for Apache Kafka
+    azure: Event Hubs for Apache Kafka
+  objectStorage:
+    aws: S3
+    gcp: Cloud Storage
+    azure: Blob Storage
+  secrets:
+    aws: Secrets Manager
+    gcp: Secret Manager
+    azure: Key Vault
+requiredOutputs:
+  - network.publicSubnetIds
+  - network.privateSubnetIds
+  - network.dataSubnetIds
+  - kubernetes.clusterName
+  - kubernetes.oidcProvider
+  - data.connectionSecretReferences
+  - registry.repositoryUrls
+  - observability.logDestinations
