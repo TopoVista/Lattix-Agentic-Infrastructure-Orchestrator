@@ -1,0 +1,49 @@
+name: Terraform Plan
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to plan
+        required: true
+        type: choice
+        options: [dev, staging, prod]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  plan:
+    name: Plan ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    env:
+      TF_IN_AUTOMATION: "true"
+      TF_VAR_settings: ${{ secrets.TF_VAR_SETTINGS }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.TERRAFORM_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Write backend configuration
+        shell: bash
+        env:
+          BACKEND_CONFIG: ${{ secrets.TERRAFORM_BACKEND_CONFIG }}
+        run: printf '%s' "$BACKEND_CONFIG" > "terraform/environments/${{ inputs.environment }}/backend.hcl"
+      - name: Initialize
+        working-directory: terraform/environments/${{ inputs.environment }}
+        run: terraform init -input=false -backend-config=backend.hcl
+      - name: Plan
+        working-directory: terraform/environments/${{ inputs.environment }}
+        run: terraform plan -input=false -lock-timeout=5m -out=lattix.tfplan
+      - name: Render plan
+        working-directory: terraform/environments/${{ inputs.environment }}
+        run: terraform show -no-color lattix.tfplan > lattix-plan.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan-${{ inputs.environment }}
+          path: terraform/environments/${{ inputs.environment }}/lattix-plan.txt
+          retention-days: 14

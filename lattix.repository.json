@@ -1,7 +1,7 @@
 {
   "name": "lattix",
   "version": "0.1.0",
-  "phase": "01-repository-setup",
+  "phase": "03-cloud-infrastructure",
   "languages": {
     "java": {
       "packagePrefix": "com.lattix",

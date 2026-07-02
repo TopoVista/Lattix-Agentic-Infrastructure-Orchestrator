@@ -1,0 +1,10 @@
+directory:
+  - terraform
+framework:
+  - terraform
+compact: true
+quiet: true
+download-external-modules: false
+skip-check:
+  - CKV_AWS_144 # Cross-region S3 replication is introduced by the multi-region phase.
+  - CKV_AWS_145 # Dedicated service keys are introduced as workloads receive data classifications.

@@ -22,6 +22,56 @@ $requiredRootFiles = @(
   "lattix.repository.json"
 )
 
+$phase02Paths = @(
+  "docker-compose.yml",
+  ".devcontainer\devcontainer.json",
+  ".vscode\extensions.json",
+  ".vscode\settings.json",
+  ".pre-commit-config.yaml",
+  ".yamllint.yml",
+  "commitlint.config.cjs",
+  ".github\workflows\ci.yml",
+  ".github\workflows\security.yml",
+  ".github\workflows\infrastructure.yml",
+  ".github\workflows\docs.yml",
+  "config\env\local.env.example",
+  "config\env\services.env.example",
+  "config\env\profiles.json",
+  "shared\dev-infrastructure\src\index.ts",
+  "scripts\dev\setup.ps1",
+  "scripts\dev\doctor.ps1",
+  "scripts\dev\start-dependencies.ps1",
+  "scripts\ci\run-local-ci.ps1",
+  "devops\hooks\commit-msg.sample"
+)
+
+$phase03Paths = @(
+  "terraform\bootstrap\main.tf",
+  "terraform\stacks\aws-platform\main.tf",
+  "terraform\modules\provider-abstractions\main.tf",
+  "terraform\modules\aws-network\main.tf",
+  "terraform\modules\aws-identity\main.tf",
+  "terraform\modules\aws-data\main.tf",
+  "terraform\modules\aws-kubernetes\main.tf",
+  "terraform\modules\aws-edge\main.tf",
+  "terraform\modules\aws-observability\main.tf",
+  "terraform\environments\local\main.tf",
+  "terraform\environments\dev\main.tf",
+  "terraform\environments\staging\main.tf",
+  "terraform\environments\prod\main.tf",
+  "cloud\provider-capabilities.yaml",
+  "cloud\aws\accounts.example.yaml",
+  "cloud\gcp\provider-contract.yaml",
+  "cloud\azure\provider-contract.yaml",
+  "scripts\infra\terraform-validate.ps1",
+  "scripts\infra\terraform-plan.ps1",
+  ".checkov.yml",
+  ".tflint.hcl",
+  "docs\architecture\diagrams\cloud-infrastructure.md",
+  "docs\operations\cloud-tagging-policy.md",
+  "docs\operations\terraform-runbook.md"
+)
+
 $failures = New-Object System.Collections.Generic.List[string]
 
 function Assert-PathExists {
@@ -70,6 +120,14 @@ foreach ($docPath in $requiredDocPaths) {
   Assert-PathExists -RelativePath $docPath -Description "Phase 00 artifact"
 }
 
+foreach ($phase02Path in $phase02Paths) {
+  Assert-PathExists -RelativePath $phase02Path -Description "Phase 02 artifact"
+}
+
+foreach ($phase03Path in $phase03Paths) {
+  Assert-PathExists -RelativePath $phase03Path -Description "Phase 03 artifact"
+}
+
 if ($failures.Count -gt 0) {
   Write-Host "Repository structure check failed:" -ForegroundColor Red
   foreach ($failure in $failures) {
@@ -79,4 +137,4 @@ if ($failures.Count -gt 0) {
 }
 
 Write-Host "Repository structure check passed." -ForegroundColor Green
-Write-Host "Validated $($manifest.modules.Count) modules and $($requiredRootFiles.Count) root metadata files."
+Write-Host "Validated $($manifest.modules.Count) modules, $($requiredRootFiles.Count) root files, $($phase02Paths.Count) Phase 02 artifacts, and $($phase03Paths.Count) Phase 03 artifacts."

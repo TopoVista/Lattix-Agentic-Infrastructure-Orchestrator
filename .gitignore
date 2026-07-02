@@ -23,6 +23,23 @@ test-results/
 .env
 .env.*
 !.env.example
+config/env/*.env
+!config/env/*.env.example
+
+# Terraform local state and generated plans
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+!*.tfvars.example
+backend.hcl
+!backend.hcl.example
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
 *.pem
 *.key
 *.p12

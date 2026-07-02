@@ -1,0 +1,25 @@
+name: Docs
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+jobs:
+  markdown:
+    name: Markdown lint template
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DavidAnson/markdownlint-cli2-action@v19
+        with:
+          globs: "**/*.md"
+
+  links:
+    name: Link check template
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: "--no-progress './**/*.md'"

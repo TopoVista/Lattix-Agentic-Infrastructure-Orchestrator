@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "redhat.java",
+    "vscjava.vscode-gradle",
+    "ms-python.python",
+    "charliermarsh.ruff",
+    "ms-azuretools.vscode-docker",
+    "hashicorp.terraform",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "redhat.vscode-yaml",
+    "DavidAnson.vscode-markdownlint",
+    "GitHub.vscode-github-actions",
+    "bierner.markdown-mermaid"
+  ]
+}

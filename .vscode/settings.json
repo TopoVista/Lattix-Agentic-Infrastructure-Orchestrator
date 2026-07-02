@@ -1,0 +1,24 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "python.analysis.typeCheckingMode": "basic",
+  "python.defaultInterpreterPath": ".venv/bin/python",
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.{yml,yaml}",
+    "https://json.schemastore.org/docker-compose.json": "docker-compose.yml",
+    "https://json.schemastore.org/pre-commit-config.json": ".pre-commit-config.yaml"
+  },
+  "markdown.validate.enabled": true
+}

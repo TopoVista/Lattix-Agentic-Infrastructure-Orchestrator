@@ -6,6 +6,13 @@
   "packageManager": "pnpm@10.0.0",
   "scripts": {
     "check:structure": "pwsh -NoProfile -File scripts/repository/check-structure.ps1",
+    "check:doctor": "pwsh -NoProfile -File scripts/dev/doctor.ps1",
+    "dev:setup": "pwsh -NoProfile -File scripts/dev/setup.ps1",
+    "dev:deps": "pwsh -NoProfile -File scripts/dev/start-dependencies.ps1 -Profile core",
+    "infra:validate": "pwsh -NoProfile -File scripts/infra/terraform-validate.ps1",
+    "infra:plan:dev": "pwsh -NoProfile -File scripts/infra/terraform-plan.ps1 -Environment dev",
+    "ci:local": "pwsh -NoProfile -File scripts/ci/run-local-ci.ps1",
+    "commitlint": "commitlint --from=HEAD~1 --to=HEAD --verbose",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck"
@@ -15,7 +22,11 @@
     "pnpm": ">=10.0.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
     "@types/node": "^22.0.0",
+    "markdownlint-cli2": "^0.15.0",
+    "prettier": "^3.0.0",
     "typescript": "^5.0.0"
   }
 }
