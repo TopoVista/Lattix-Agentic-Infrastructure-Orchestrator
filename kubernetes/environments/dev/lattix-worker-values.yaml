@@ -1,0 +1,16 @@
+replicaCount: 2
+image:
+  repository: lattix/document-worker
+  tag: dev
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 70

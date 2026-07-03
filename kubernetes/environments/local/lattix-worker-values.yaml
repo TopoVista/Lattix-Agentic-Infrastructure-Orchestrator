@@ -1,0 +1,13 @@
+replicaCount: 1
+image:
+  repository: lattix/document-worker
+  tag: local
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 384Mi
+autoscaling:
+  enabled: false

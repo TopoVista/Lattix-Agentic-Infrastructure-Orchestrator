@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lattix-gateway
+  namespace: gateway
+spec:
+  tls:
+    - hosts:
+        - lattix.example.com
+      secretName: lattix-gateway-prod-tls
+  rules:
+    - host: lattix.example.com
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lattix-tools
+  namespace: tools
+spec:
+  tls:
+    - hosts:
+        - tools.lattix.example.com
+      secretName: lattix-tools-prod-tls
+  rules:
+    - host: tools.lattix.example.com

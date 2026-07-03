@@ -1,0 +1,16 @@
+replicaCount: 3
+image:
+  repository: lattix/document-worker
+  tag: staging
+resources:
+  requests:
+    cpu: 300m
+    memory: 512Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 12
+  targetCPUUtilizationPercentage: 65

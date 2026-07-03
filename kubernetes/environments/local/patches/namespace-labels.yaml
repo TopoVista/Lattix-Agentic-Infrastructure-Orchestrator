@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gateway
+  labels:
+    lattix.io/mesh: disabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: services
+  labels:
+    lattix.io/mesh: disabled

@@ -1,0 +1,23 @@
+replicaCount: 2
+image:
+  repository: lattix/auth-service
+  tag: dev
+ingress:
+  enabled: true
+  host: auth.dev.lattix.example.com
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 800m
+    memory: 1Gi
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 65
+networkPolicy:
+  ingressNamespaces:
+    - gateway
+    - observability

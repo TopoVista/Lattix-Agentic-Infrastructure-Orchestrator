@@ -1,0 +1,23 @@
+replicaCount: 3
+image:
+  repository: lattix/auth-service
+  tag: staging
+ingress:
+  enabled: true
+  host: auth.staging.lattix.example.com
+resources:
+  requests:
+    cpu: 300m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 2Gi
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 60
+networkPolicy:
+  ingressNamespaces:
+    - gateway
+    - observability
