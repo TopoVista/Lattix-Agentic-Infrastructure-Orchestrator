@@ -1,0 +1,32 @@
+name: Kubernetes Platform
+
+on:
+  pull_request:
+    paths:
+      - "kubernetes/**"
+      - "scripts/k8s/**"
+      - ".github/workflows/kubernetes-platform.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "kubernetes/**"
+      - "scripts/k8s/**"
+
+jobs:
+  validate-kubernetes:
+    name: Validate Kubernetes manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+      - name: Install kubeconform
+        run: |
+          curl -sSL -o kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz
+          tar -xzf kubeconform.tar.gz kubeconform
+          sudo mv kubeconform /usr/local/bin/kubeconform
+      - name: Validate manifests and charts
+        shell: pwsh
+        run: ./scripts/k8s/validate-manifests.ps1 -Strict
