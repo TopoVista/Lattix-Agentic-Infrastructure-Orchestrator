@@ -16,9 +16,11 @@ subprojects {
         dependencies {
             testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.5")
             testImplementation("org.springframework.security:spring-security-test:6.3.4")
-            // Shared test utilities for all subprojects
-            testImplementation(project(":shared:test"))
-            testImplementation(project(":shared:integration-test"))
+            if (project.path != ":gateway:api-gateway") {
+                // Shared test utilities for servlet-based subprojects
+                testImplementation(project(":shared:test"))
+                testImplementation(project(":shared:integration-test"))
+            }
         }
     }
 

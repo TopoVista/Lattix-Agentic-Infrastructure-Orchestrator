@@ -20,5 +20,6 @@
     "https://json.schemastore.org/docker-compose.json": "docker-compose.yml",
     "https://json.schemastore.org/pre-commit-config.json": ".pre-commit-config.yaml"
   },
-  "markdown.validate.enabled": true
+  "markdown.validate.enabled": true,
+  "java.compile.nullAnalysis.mode": "automatic"
 }
