@@ -1,0 +1,157 @@
+server:
+  port: ${GATEWAY_PORT:8088}
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 3000
+        response-timeout: 30s
+
+lattix:
+  gateway:
+    security:
+      issuer-uri: ${JWT_ISSUER_URI:https://auth.lattix.local}
+      audience: ${JWT_AUDIENCE:lattix-api}
+      shared-secret: ${JWT_SHARED_SECRET:dev-only-gateway-secret-dev-only-gateway-secret}
+      public-paths:
+        - /actuator/health/**
+        - /actuator/info
+        - /api/v1/auth/**
+        - /api/v1/gateway/openapi/**
+        - /internal/gateway/**
+    rate-limit:
+      backend: ${GATEWAY_RATE_LIMIT_BACKEND:memory}
+      default-per-minute: ${DEFAULT_RATE_LIMIT_PER_MINUTE:600}
+      per-workspace-per-minute: ${GATEWAY_RATE_LIMIT_PER_WORKSPACE:2400}
+      per-token-per-minute: ${GATEWAY_RATE_LIMIT_PER_TOKEN:1200}
+      per-ip-per-minute: ${GATEWAY_RATE_LIMIT_PER_IP:240}
+      window: ${GATEWAY_RATE_LIMIT_WINDOW:PT1M}
+    validation:
+      max-payload-bytes: ${GATEWAY_REQUEST_MAX_BYTES:1048576}
+      allowed-content-types:
+        - application/json
+        - application/merge-patch+json
+        - application/x-www-form-urlencoded
+        - multipart/form-data
+      allowed-methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - OPTIONS
+        - HEAD
+    routes:
+      - id: auth
+        service-name: auth-service
+        path: /api/v1/auth/**
+        uri: ${AUTH_SERVICE_URI:${LATTIX_GATEWAY_ROUTE_BASE_URI:http://auth-service:8080}}
+        auth-required: false
+        scopes: []
+        strip-prefix: 3
+        retries: 0
+        timeout: PT5S
+        cost: 1
+      - id: users
+        service-name: user-service
+        path: /api/v1/users/**
+        uri: ${USER_SERVICE_URI:${LATTIX_GATEWAY_ROUTE_BASE_URI:http://user-service:8080}}
+        auth-required: true
+        scopes: [users:read]
+        strip-prefix: 3
+        retries: 2
+        timeout: PT8S
+        cost: 1
+      - id: workspaces
+        service-name: workspace-service
+        path: /api/v1/workspaces/**
+        uri: ${WORKSPACE_SERVICE_URI:${LATTIX_GATEWAY_ROUTE_BASE_URI:http://workspace-service:8080}}
+        auth-required: true
+        scopes: [workspaces:read]
+        strip-prefix: 3
+        retries: 2
+        timeout: PT8S
+        cost: 1
+      - id: repositories
+        service-name: repository-service
+        path: /api/v1/repositories/**
+        uri: ${REPOSITORY_SERVICE_URI:${LATTIX_GATEWAY_ROUTE_BASE_URI:http://repository-service:8080}}
+        auth-required: true
+        scopes: [repositories:read]
+        strip-prefix: 3
+        retries: 2
+        timeout: PT8S
+        cost: 1
+      - id: projects
+        service-name: project-service
+        path: /api/v1/projects/**
+        uri: ${PROJECT_SERVICE_URI:${LATTIX_GATEWAY_ROUTE_BASE_URI:http://project-service:8080}}
+        auth-required: true
+        scopes: [projects:read]
+        strip-prefix: 3
+        retries: 2
+        timeout: PT8S
+        cost: 1
+      - id: tools
+        service-name: tool-service
+        path: /api/v1/tools/**
+        uri: ${TOOL_SERVICE_URI:${LATTIX_GATEWAY_ROUTE_BASE_URI:http://tool-service:8080}}
+        auth-required: true
+        scopes: [tools:read]
+        strip-prefix: 3
+        retries: 2
+        timeout: PT8S
+        cost: 1
+      - id: search
+        service-name: search-service
+        path: /api/v1/search/**
+        uri: ${SEARCH_SERVICE_URI:${LATTIX_GATEWAY_ROUTE_BASE_URI:http://search-service:8080}}
+        auth-required: true
+        scopes: [search:read]
+        strip-prefix: 3
+        retries: 2
+        timeout: PT8S
+        cost: 2
+      - id: knowledge
+        service-name: knowledge-service
+        path: /api/v1/knowledge/**
+        uri: ${KNOWLEDGE_SERVICE_URI:${LATTIX_GATEWAY_ROUTE_BASE_URI:http://knowledge-service:8080}}
+        auth-required: true
+        scopes: [knowledge:read]
+        strip-prefix: 3
+        retries: 2
+        timeout: PT8S
+        cost: 2
+      - id: memory
+        service-name: memory-service
+        path: /api/v1/memory/**
+        uri: ${MEMORY_SERVICE_URI:${LATTIX_GATEWAY_ROUTE_BASE_URI:http://memory-service:8080}}
+        auth-required: true
+        scopes: [memory:read]
+        strip-prefix: 3
+        retries: 2
+        timeout: PT8S
+        cost: 2
+      - id: documents
+        service-name: document-service
+        path: /api/v1/documents/**
+        uri: ${DOCUMENT_SERVICE_URI:${LATTIX_GATEWAY_ROUTE_BASE_URI:http://document-service:8080}}
+        auth-required: true
+        scopes: [documents:read]
+        strip-prefix: 3
+        retries: 2
+        timeout: PT8S
+        cost: 1
+      - id: analytics
+        service-name: analytics-service
+        path: /api/v1/analytics/**
+        uri: ${ANALYTICS_SERVICE_URI:${LATTIX_GATEWAY_ROUTE_BASE_URI:http://analytics-service:8080}}
+        auth-required: true
+        scopes: [analytics:read]
+        strip-prefix: 3
+        retries: 1
+        timeout: PT10S
+        cost: 3
