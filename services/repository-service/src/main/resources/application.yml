@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: repository-service
+server:
+  port: 0
+logging:
+  level:
+    root: INFO

@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: tool-service
+server:
+  port: 0
+logging:
+  level:
+    root: INFO

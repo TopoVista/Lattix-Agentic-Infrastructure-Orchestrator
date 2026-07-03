@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: monitoring-service
+server:
+  port: 0
+logging:
+  level:
+    root: INFO

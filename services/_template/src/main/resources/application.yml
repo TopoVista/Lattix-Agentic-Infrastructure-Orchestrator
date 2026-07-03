@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: template-service
+server:
+  port: 0
+logging:
+  level:
+    root: INFO
