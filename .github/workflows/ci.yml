@@ -50,5 +50,5 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
-      - name: Validate Gradle metadata files exist
-        run: test -f settings.gradle.kts && test -f build.gradle.kts && test -f gradle.properties
+      - name: Run Java tests
+        run: gradle test --no-daemon

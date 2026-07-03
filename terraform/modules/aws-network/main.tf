@@ -153,7 +153,7 @@ resource "aws_vpc_security_group_ingress_rule" "endpoints_https" {
 
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = aws_vpc.this.id
-  service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
+  service_name      = "com.amazonaws.${data.aws_region.current.region}.s3"
   vpc_endpoint_type = "Gateway"
   route_table_ids   = concat(aws_route_table.private[*].id, aws_route_table.data[*].id)
   tags              = merge(var.tags, { Name = "${var.name_prefix}-s3-endpoint" })
@@ -163,7 +163,7 @@ resource "aws_vpc_endpoint" "interface" {
   for_each = var.enable_interface_endpoints ? local.interface_services : toset([])
 
   vpc_id              = aws_vpc.this.id
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.${each.value}"
+  service_name        = "com.amazonaws.${data.aws_region.current.region}.${each.value}"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
   subnet_ids          = aws_subnet.private[*].id

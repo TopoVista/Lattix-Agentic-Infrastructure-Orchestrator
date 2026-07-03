@@ -52,7 +52,7 @@ resource "aws_cloudwatch_dashboard" "platform" {
       properties = {
         title   = "Application errors"
         view    = "timeSeries"
-        region  = data.aws_region.current.name
+        region  = data.aws_region.current.region
         metrics = [["Lattix/Application", "ErrorCount"]]
       }
     }]

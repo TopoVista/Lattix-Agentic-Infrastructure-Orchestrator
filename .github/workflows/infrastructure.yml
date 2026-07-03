@@ -67,4 +67,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install --upgrade yamllint
-      - run: yamllint .github cloud docker-compose.yml .pre-commit-config.yaml
+      - run: yamllint .github cloud kubernetes docker-compose.yml .pre-commit-config.yaml
