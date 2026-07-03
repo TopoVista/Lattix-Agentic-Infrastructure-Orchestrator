@@ -18,6 +18,9 @@ logs/
 reports/
 coverage/
 test-results/
+docs/implementation-plans/[0-9][0-9]-*.md
+scripts/dev/auto-push.ps1
+scripts/dev/install-auto-push-task.ps1
 
 # Environment and secrets
 .env
