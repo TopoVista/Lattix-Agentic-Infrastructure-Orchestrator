@@ -3,6 +3,22 @@ spring:
     name: auth-service
 server:
   port: 0
+  error:
+    include-message: always
+    include-binding-errors: always
 logging:
   level:
     root: INFO
+
+lattix:
+  auth:
+    issuer: ${JWT_ISSUER:lattix-auth}
+    access-token-ttl-seconds: ${ACCESS_TOKEN_TTL_SECONDS:900}
+    refresh-token-ttl-seconds: ${REFRESH_TOKEN_TTL_SECONDS:2592000}
+    mfa-issuer-name: ${MFA_ISSUER_NAME:Lattix}
+    private-key-pem: ${JWT_PRIVATE_KEY:}
+    public-key-pem: ${JWT_PUBLIC_KEY:}
+    providers:
+      - google
+      - github
+      - microsoft
