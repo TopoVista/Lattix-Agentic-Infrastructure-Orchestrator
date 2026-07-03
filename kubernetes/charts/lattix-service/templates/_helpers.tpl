@@ -2,6 +2,10 @@
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "lattix-service.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" -}}
+{{- end -}}
+
 {{- define "lattix-service.fullname" -}}
 {{- printf "%s-%s" .Release.Name (include "lattix-service.name" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

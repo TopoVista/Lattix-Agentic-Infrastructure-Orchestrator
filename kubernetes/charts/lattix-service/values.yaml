@@ -3,12 +3,19 @@ image:
   repository: lattix/service
   tag: latest
   pullPolicy: IfNotPresent
+imagePullSecrets: []
 service:
   type: ClusterIP
   port: 8080
+  targetPort: 8080
 ingress:
   enabled: false
   host: lattix.example.com
+  path: /
+  pathType: Prefix
+  tls:
+    enabled: true
+    secretName: lattix-service-tls
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -24,6 +31,14 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 60
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
+networkPolicy:
+  enabled: true
+  ingressNamespaces:
+    - gateway
+  ingressPort: 8080
 livenessProbe:
   enabled: true
   path: /healthz
@@ -32,6 +47,23 @@ readinessProbe:
   enabled: true
   path: /ready
   port: 8080
+podAnnotations: {}
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: lattix-service
 nodeSelector: {}
 tolerations: []
 affinity: {}

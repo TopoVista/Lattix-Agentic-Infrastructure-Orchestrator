@@ -3,6 +3,7 @@ image:
   repository: lattix/worker
   tag: latest
   pullPolicy: IfNotPresent
+imagePullSecrets: []
 resources:
   requests:
     cpu: 100m
@@ -14,6 +15,20 @@ autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
+podAnnotations: {}
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
 nodeSelector: {}
 tolerations: []
 affinity: {}
