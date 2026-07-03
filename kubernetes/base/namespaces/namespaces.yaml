@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: platform
+      labels:
+        environment: base
+        owner: platform
+        workload: platform
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: gateway
+      labels:
+        environment: base
+        owner: platform
+        workload: gateway
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: services
+      labels:
+        environment: base
+        owner: service-owners
+        workload: services
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: agents
+      labels:
+        environment: base
+        owner: agent-platform
+        workload: agents
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: ai
+      labels:
+        environment: base
+        owner: ai-platform
+        workload: ai
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: data
+      labels:
+        environment: base
+        owner: data-platform
+        workload: data
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: observability
+      labels:
+        environment: base
+        owner: observability
+        workload: observability
+  - apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: tools
+      labels:
+        environment: base
+        owner: platform
+        workload: tools

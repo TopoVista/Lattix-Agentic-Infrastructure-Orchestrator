@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: observability
+  labels:
+    environment: base
+    owner: observability
+    workload: observability
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: platform-services
+  namespace: observability
+spec:
+  selector:
+    matchLabels:
+      app: lattix-service
+  endpoints:
+    - port: metrics
+      interval: 30s
+      scrapeTimeout: 10s
