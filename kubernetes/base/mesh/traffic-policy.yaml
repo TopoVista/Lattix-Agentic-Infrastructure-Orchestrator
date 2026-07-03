@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: gateway-default-routing
+  namespace: gateway
+spec:
+  hosts:
+    - lattix.local
+  gateways:
+    - istio-system/lattix-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /api/
+      route:
+        - destination:
+            host: api-gateway.gateway.svc.cluster.local
+            port:
+              number: 8080
+      retries:
+        attempts: 3
+        perTryTimeout: 2s
+        retryOn: gateway-error,connect-failure,refused-stream,5xx
+      timeout: 15s
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: services-default-traffic-policy
+  namespace: services
+spec:
+  host: "*.services.svc.cluster.local"
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 200
+      http:
+        http1MaxPendingRequests: 1000
+        maxRequestsPerConnection: 100
+    outlierDetection:
+      consecutive5xxErrors: 5
+      interval: 30s
+      baseEjectionTime: 60s

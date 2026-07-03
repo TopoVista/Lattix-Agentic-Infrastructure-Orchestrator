@@ -1,0 +1,20 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: worker-queue-scaler-example
+  namespace: agents
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: example-worker
+  minReplicaCount: 1
+  maxReplicaCount: 20
+  pollingInterval: 30
+  cooldownPeriod: 120
+  triggers:
+    - type: kafka
+      metadata:
+        bootstrapServers: kafka.data.svc.cluster.local:9092
+        consumerGroup: example-worker
+        topic: worker-tasks
+        lagThreshold: "50"
