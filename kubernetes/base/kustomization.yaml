@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespaces/namespaces.yaml
+  - policies/default-deny-networkpolicy.yaml
+  - policies/allow-approved-flows.yaml
+  - policies/resource-quotas.yaml
+  - policies/limit-ranges.yaml
+  - policies/pod-disruption-budgets.yaml
+  - ingress/gateway-ingress.yaml
+  - ingress/internal-tools-ingress.yaml
+  - mesh/istio-mtls.yaml
+  - mesh/traffic-policy.yaml
+  - observability/prometheus-namespace.yaml
+  - secrets/cluster-secret-store.yaml
+  - secrets/external-secrets.yaml
+  - autoscaling/vpa-defaults.yaml
+  - autoscaling/keda-rabbitmq-scaler.example.yaml
+  - storage/storage-classes.yaml
+  - storage/pvc-conventions.yaml

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: services-quota
+  namespace: services
+spec:
+  hard:
+    requests.cpu: "12"
+    requests.memory: 24Gi
+    limits.cpu: "24"
+    limits.memory: 48Gi
+    pods: "300"
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: agents-quota
+  namespace: agents
+spec:
+  hard:
+    requests.cpu: "16"
+    requests.memory: 32Gi
+    limits.cpu: "32"
+    limits.memory: 64Gi
+    pods: "250"
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: ai-quota
+  namespace: ai
+spec:
+  hard:
+    requests.cpu: "32"
+    requests.memory: 128Gi
+    limits.cpu: "64"
+    limits.memory: 256Gi
+    pods: "200"

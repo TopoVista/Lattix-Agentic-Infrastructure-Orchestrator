@@ -1,67 +1,87 @@
 apiVersion: v1
-kind: List
-items:
-  - apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: platform
-      labels:
-        environment: base
-        owner: platform
-        workload: platform
-  - apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: gateway
-      labels:
-        environment: base
-        owner: platform
-        workload: gateway
-  - apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: services
-      labels:
-        environment: base
-        owner: service-owners
-        workload: services
-  - apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: agents
-      labels:
-        environment: base
-        owner: agent-platform
-        workload: agents
-  - apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: ai
-      labels:
-        environment: base
-        owner: ai-platform
-        workload: ai
-  - apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: data
-      labels:
-        environment: base
-        owner: data-platform
-        workload: data
-  - apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: observability
-      labels:
-        environment: base
-        owner: observability
-        workload: observability
-  - apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: tools
-      labels:
-        environment: base
-        owner: platform
-        workload: tools
+kind: Namespace
+metadata:
+  name: platform
+  labels:
+    lattix.io/environment: base
+    lattix.io/owner: platform
+    lattix.io/workload: platform
+    lattix.io/data-sensitivity: internal
+    pod-security.kubernetes.io/enforce: baseline
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gateway
+  labels:
+    lattix.io/environment: base
+    lattix.io/owner: platform
+    lattix.io/workload: gateway
+    lattix.io/data-sensitivity: confidential
+    pod-security.kubernetes.io/enforce: baseline
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: services
+  labels:
+    lattix.io/environment: base
+    lattix.io/owner: service-owners
+    lattix.io/workload: services
+    lattix.io/data-sensitivity: confidential
+    pod-security.kubernetes.io/enforce: restricted
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agents
+  labels:
+    lattix.io/environment: base
+    lattix.io/owner: agent-platform
+    lattix.io/workload: agents
+    lattix.io/data-sensitivity: confidential
+    pod-security.kubernetes.io/enforce: restricted
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ai
+  labels:
+    lattix.io/environment: base
+    lattix.io/owner: ai-platform
+    lattix.io/workload: ai
+    lattix.io/data-sensitivity: restricted
+    pod-security.kubernetes.io/enforce: restricted
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: data
+  labels:
+    lattix.io/environment: base
+    lattix.io/owner: data-platform
+    lattix.io/workload: data
+    lattix.io/data-sensitivity: restricted
+    pod-security.kubernetes.io/enforce: restricted
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: observability
+  labels:
+    lattix.io/environment: base
+    lattix.io/owner: observability
+    lattix.io/workload: observability
+    lattix.io/data-sensitivity: internal
+    pod-security.kubernetes.io/enforce: baseline
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tools
+  labels:
+    lattix.io/environment: base
+    lattix.io/owner: platform
+    lattix.io/workload: tools
+    lattix.io/data-sensitivity: internal
+    pod-security.kubernetes.io/enforce: baseline
