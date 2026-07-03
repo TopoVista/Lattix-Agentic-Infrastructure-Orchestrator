@@ -13,5 +13,6 @@ repositories {
 }
 
 dependencies {
+    api(project(":shared:backend"))
     api(project(":shared:tracing"))
 }

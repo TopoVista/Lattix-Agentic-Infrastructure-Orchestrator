@@ -1,5 +1,7 @@
 -- Initial schema placeholder for services that enable persistence
-CREATE TABLE IF NOT EXISTS example_table (
-    id UUID PRIMARY KEY,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
-);
+CREATE TABLE
+IF
+  NOT EXISTS example_table (
+    id UUID PRIMARY KEY
+    , created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+  );
