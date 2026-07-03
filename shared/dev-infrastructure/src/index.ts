@@ -48,6 +48,38 @@ export interface DependencyStatus {
   exitCode?: number;
 }
 
+export interface NamespacePolicyInput {
+  namespace: string;
+  allowedIngressNamespaces: string[];
+  ingressPort: number;
+  meshMode: "enabled" | "disabled";
+}
+
+export interface ServiceDeploymentInput {
+  name: string;
+  imageRepository: string;
+  imageTag: string;
+  ingressHost: string;
+  port: number;
+  minReplicas: number;
+  maxReplicas: number;
+  cpuRequest: string;
+  memoryRequest: string;
+  cpuLimit: string;
+  memoryLimit: string;
+}
+
+export interface ManifestValidationInput {
+  manifest: string;
+  requiredLabels: string[];
+}
+
+export interface ValidationReport {
+  valid: boolean;
+  errors: string[];
+  warnings: string[];
+}
+
 const defaultRequiredTools = ["git", "node", "python"];
 const defaultOptionalTools = ["pnpm", "java", "docker", "terraform", "kubectl", "helm", "pre-commit", "gitleaks"];
 
@@ -165,6 +197,101 @@ export function startLocalDependency(name: DependencyName, execute = false, repo
     command,
     executed: true,
     exitCode: result.status ?? 1
+  };
+}
+
+export function createNamespacePolicy(input: NamespacePolicyInput): string {
+  const ingressRules = input.allowedIngressNamespaces
+    .map((namespace) => `        - namespaceSelector:\n            matchLabels:\n              kubernetes.io/metadata.name: ${namespace}`)
+    .join("\n");
+
+  return [
+    "apiVersion: networking.k8s.io/v1",
+    "kind: NetworkPolicy",
+    "metadata:",
+    `  name: allow-${input.namespace}-ingress`,
+    `  namespace: ${input.namespace}`,
+    "spec:",
+    "  podSelector: {}",
+    "  policyTypes:",
+    "    - Ingress",
+    "  ingress:",
+    "    - from:",
+    ingressRules,
+    "      ports:",
+    "        - protocol: TCP",
+    `          port: ${input.ingressPort}`,
+    input.meshMode === "enabled" ? "  egress:\n    - {}" : ""
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+export function renderServiceValues(input: ServiceDeploymentInput): Record<string, unknown> {
+  return {
+    replicaCount: input.minReplicas,
+    image: {
+      repository: input.imageRepository,
+      tag: input.imageTag
+    },
+    service: {
+      type: "ClusterIP",
+      port: input.port,
+      targetPort: input.port
+    },
+    ingress: {
+      enabled: true,
+      host: input.ingressHost
+    },
+    autoscaling: {
+      enabled: input.maxReplicas > input.minReplicas,
+      minReplicas: input.minReplicas,
+      maxReplicas: input.maxReplicas,
+      targetCPUUtilizationPercentage: 65
+    },
+    resources: {
+      requests: {
+        cpu: input.cpuRequest,
+        memory: input.memoryRequest
+      },
+      limits: {
+        cpu: input.cpuLimit,
+        memory: input.memoryLimit
+      }
+    }
+  };
+}
+
+export function validateKubernetesManifest(input: ManifestValidationInput): ValidationReport {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  if (!input.manifest.includes("kind: Deployment")) {
+    errors.push("Manifest does not contain a Deployment resource.");
+  }
+
+  if (!input.manifest.includes("resources:")) {
+    errors.push("Deployment resources block is missing.");
+  }
+
+  if (!input.manifest.includes("livenessProbe:")) {
+    warnings.push("Liveness probe is missing.");
+  }
+
+  if (!input.manifest.includes("readinessProbe:")) {
+    warnings.push("Readiness probe is missing.");
+  }
+
+  for (const label of input.requiredLabels) {
+    if (!input.manifest.includes(label)) {
+      errors.push(`Required label not found: ${label}`);
+    }
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+    warnings
   };
 }
 

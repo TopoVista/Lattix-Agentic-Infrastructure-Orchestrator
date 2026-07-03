@@ -72,6 +72,57 @@ $phase03Paths = @(
   "docs\operations\terraform-runbook.md"
 )
 
+$phase04Paths = @(
+  "kubernetes\base\kustomization.yaml",
+  "kubernetes\base\namespaces\namespaces.yaml",
+  "kubernetes\base\policies\default-deny-networkpolicy.yaml",
+  "kubernetes\base\policies\allow-approved-flows.yaml",
+  "kubernetes\base\policies\resource-quotas.yaml",
+  "kubernetes\base\policies\limit-ranges.yaml",
+  "kubernetes\base\ingress\gateway-ingress.yaml",
+  "kubernetes\base\ingress\internal-tools-ingress.yaml",
+  "kubernetes\base\mesh\istio-mtls.yaml",
+  "kubernetes\base\mesh\traffic-policy.yaml",
+  "kubernetes\base\secrets\cluster-secret-store.yaml",
+  "kubernetes\base\secrets\external-secrets.yaml",
+  "kubernetes\environments\local\kustomization.yaml",
+  "kubernetes\environments\dev\kustomization.yaml",
+  "kubernetes\environments\staging\kustomization.yaml",
+  "kubernetes\environments\prod\kustomization.yaml",
+  "kubernetes\operators\kustomization.yaml",
+  "kubernetes\charts\lattix-service\values.schema.json",
+  "kubernetes\charts\lattix-worker\values.schema.json",
+  "scripts\k8s\validate-manifests.ps1",
+  "config\env\kubernetes.env.example",
+  ".github\workflows\kubernetes-platform.yml"
+)
+
+$phase05Paths = @(
+  "services\_template\build.gradle.kts",
+  "services\_template\Dockerfile",
+  "services\auth-service\build.gradle.kts",
+  "services\user-service\build.gradle.kts",
+  "services\workspace-service\build.gradle.kts",
+  "services\repository-service\build.gradle.kts",
+  "services\project-service\build.gradle.kts",
+  "services\notification-service\build.gradle.kts",
+  "services\tool-service\build.gradle.kts",
+  "services\search-service\build.gradle.kts",
+  "services\knowledge-service\build.gradle.kts",
+  "services\memory-service\build.gradle.kts",
+  "services\document-service\build.gradle.kts",
+  "services\analytics-service\build.gradle.kts",
+  "services\logging-service\build.gradle.kts",
+  "services\monitoring-service\build.gradle.kts",
+  "shared\backend\src\main\java\com\lattix\shared\backend\web\ApiResponse.java",
+  "shared\backend\src\main\java\com\lattix\shared\backend\web\ErrorResponse.java",
+  "shared\backend\src\main\java\com\lattix\shared\backend\security\CurrentPrincipal.java",
+  "shared\events\src\main\java\com\lattix\shared\events\KafkaEventPublisher.java",
+  "shared\integration-test\src\main\java\com\lattix\shared\integration\IntegrationTestBase.java",
+  "shared\persistence\src\main\resources\db\migration\V1__init.sql",
+  "shared\test\src\main\java\com\lattix\shared\test\TestSecurityConfig.java"
+)
+
 $failures = New-Object System.Collections.Generic.List[string]
 
 function Assert-PathExists {
@@ -128,6 +179,14 @@ foreach ($phase03Path in $phase03Paths) {
   Assert-PathExists -RelativePath $phase03Path -Description "Phase 03 artifact"
 }
 
+foreach ($phase04Path in $phase04Paths) {
+  Assert-PathExists -RelativePath $phase04Path -Description "Phase 04 artifact"
+}
+
+foreach ($phase05Path in $phase05Paths) {
+  Assert-PathExists -RelativePath $phase05Path -Description "Phase 05 artifact"
+}
+
 if ($failures.Count -gt 0) {
   Write-Host "Repository structure check failed:" -ForegroundColor Red
   foreach ($failure in $failures) {
@@ -137,4 +196,4 @@ if ($failures.Count -gt 0) {
 }
 
 Write-Host "Repository structure check passed." -ForegroundColor Green
-Write-Host "Validated $($manifest.modules.Count) modules, $($requiredRootFiles.Count) root files, $($phase02Paths.Count) Phase 02 artifacts, and $($phase03Paths.Count) Phase 03 artifacts."
+Write-Host "Validated $($manifest.modules.Count) modules, $($requiredRootFiles.Count) root files, $($phase02Paths.Count) Phase 02 artifacts, $($phase03Paths.Count) Phase 03 artifacts, $($phase04Paths.Count) Phase 04 artifacts, and $($phase05Paths.Count) Phase 05 artifacts."

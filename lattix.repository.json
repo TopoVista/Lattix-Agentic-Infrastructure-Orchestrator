@@ -1,7 +1,7 @@
 {
   "name": "lattix",
   "version": "0.1.0",
-  "phase": "03-cloud-infrastructure",
+  "phase": "05-backend-foundation",
   "languages": {
     "java": {
       "packagePrefix": "com.lattix",
