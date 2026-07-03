@@ -15,6 +15,7 @@ Product engineering and frontend platform.
 - Frontend code must call the API gateway, not internal services directly.
 - UI state must preserve loading, empty, error, permission-denied, and audit-sensitive states.
 - Future Next.js apps should live under `frontend/apps/`.
+- Phase 10 introduces `frontend/apps/web` as the first runnable workspace shell.
 
 ## Future Phase Dependencies
 
