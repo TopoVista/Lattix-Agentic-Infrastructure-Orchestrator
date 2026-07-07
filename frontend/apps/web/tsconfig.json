@@ -26,6 +26,9 @@
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "@lattix/ai-contracts": [
+        "../../../shared/ai-contracts/src/index.ts"
       ]
     },
     "plugins": [

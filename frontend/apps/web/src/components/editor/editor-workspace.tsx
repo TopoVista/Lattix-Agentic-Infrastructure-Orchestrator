@@ -3,10 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   collectDiagnostics,
+  createRepositorySnapshot,
   findReferences,
   findSymbols,
+  ingestRepositorySnapshot,
   listAiSuggestions,
-  loadCodeGraphs,
   openEditorFile,
   parseIncrementally,
   previewRename,
@@ -18,11 +19,13 @@ import { SymbolSearch } from "./symbol-search";
 import { AstViewer } from "./ast-viewer";
 import { ReferencePanel } from "./reference-panel";
 import { DiagnosticsPanel } from "./diagnostics-panel";
-import { GraphPanel } from "./graph-panel";
+import { RepositoryIntelligencePanel } from "./repository-intelligence-panel";
+import { RepositorySearchPanel } from "./repository-search-panel";
 import { AiSuggestions } from "./ai-suggestions";
 import { Card, CardBody } from "@/components/ui/card";
 import { useWorkspaceStore } from "@/lib/store";
 import type { FileTreeNode, RepositorySummary } from "@/lib/types";
+import type { RepositoryIntelligenceIndex } from "@lattix/code-intelligence";
 
 export function EditorWorkspace({
   repository,
@@ -40,7 +43,7 @@ export function EditorWorkspace({
   const [snapshot, setSnapshot] = useState<Awaited<ReturnType<typeof parseIncrementally>> | null>(null);
   const previousSnapshotRef = useRef<Awaited<ReturnType<typeof parseIncrementally>> | null>(null);
   const [diagnostics, setDiagnostics] = useState<Awaited<ReturnType<typeof collectDiagnostics>>>([]);
-  const [graph, setGraph] = useState<Awaited<ReturnType<typeof loadCodeGraphs>> | null>(null);
+  const [index, setIndex] = useState<RepositoryIntelligenceIndex | null>(null);
   const [suggestions, setSuggestions] = useState<Awaited<ReturnType<typeof listAiSuggestions>>>([]);
   const [symbols, setSymbols] = useState<Awaited<ReturnType<typeof findSymbols>>>([]);
   const [symbolQuery, setSymbolQuery] = useState("");
@@ -73,10 +76,9 @@ export function EditorWorkspace({
       setEditorFile(nextFile);
       setDraft(nextFile.content);
 
-      const [nextSnapshot, nextDiagnostics, nextGraph, nextSuggestions] = await Promise.all([
+      const [nextSnapshot, nextDiagnostics, nextSuggestions] = await Promise.all([
         parseIncrementally({ file: nextFile, previousSnapshot: previousSnapshotRef.current ?? undefined }),
         collectDiagnostics(nextFile),
-        loadCodeGraphs({ repositoryId: repository.id }),
         listAiSuggestions({ path: nextFile.path })
       ]);
 
@@ -87,7 +89,6 @@ export function EditorWorkspace({
       setSnapshot(nextSnapshot);
       previousSnapshotRef.current = nextSnapshot;
       setDiagnostics(nextDiagnostics);
-      setGraph(nextGraph);
       setSuggestions(nextSuggestions);
     }
 
@@ -97,6 +98,11 @@ export function EditorWorkspace({
       cancelled = true;
     };
   }, [activeFilePath, repository.id]);
+
+  useEffect(() => {
+    const snapshot = createRepositorySnapshot(repository.id);
+    setIndex(ingestRepositorySnapshot(snapshot));
+  }, [repository.id]);
 
   useEffect(() => {
     let cancelled = false;
@@ -226,7 +232,7 @@ export function EditorWorkspace({
           {editorFile ? <CodeEditor file={editorFile} draft={draft} onChange={setDraft} /> : <Card><CardBody className="p-6 text-sm text-muted">Loading file...</CardBody></Card>}
           <div className="grid gap-4 xl:grid-cols-2">
             <AstViewer snapshot={snapshot} />
-            <GraphPanel graph={graph} />
+            <RepositoryIntelligencePanel bundle={index?.graphs ?? null} />
           </div>
         </div>
 
@@ -238,6 +244,7 @@ export function EditorWorkspace({
             activeSymbolName={selectedSymbol?.name ?? null}
             onSelectSymbol={(symbol) => setActiveSymbolName(symbol.name)}
           />
+          <RepositorySearchPanel index={index} query={symbolQuery} />
           <ReferencePanel symbolName={selectedSymbol?.name ?? null} references={references} />
           <DiagnosticsPanel diagnostics={diagnostics} />
           <AiSuggestions explanation={explanation} suggestions={suggestions} />
