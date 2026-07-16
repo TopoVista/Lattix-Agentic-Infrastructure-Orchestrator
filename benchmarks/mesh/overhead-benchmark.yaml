@@ -1,0 +1,8 @@
+module: lattix_service_mesh.service.ServiceMeshOptimizer.benchmark_mesh_overhead
+scenarios:
+  - gateway-to-api
+  - api-to-database-proxy
+  - agent-to-tool-service
+threshold:
+  maxOverhead: 0.15
+  maxErrors: 0

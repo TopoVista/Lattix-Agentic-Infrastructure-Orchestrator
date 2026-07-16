@@ -105,6 +105,8 @@ importers:
 
   shared/ai-contracts: {}
 
+  shared/cloud-contracts: {}
+
   shared/code-intelligence: {}
 
   shared/dev-infrastructure: {}

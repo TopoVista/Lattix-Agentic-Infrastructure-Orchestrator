@@ -1,0 +1,9 @@
+package: lattix_cloud_controllers.models
+contracts:
+  - CloudActionRequest
+  - CloudActionValidation
+  - CloudActionPlan
+  - CloudActionResult
+  - CloudResourceState
+planFirst: true
+auditRequired: true
