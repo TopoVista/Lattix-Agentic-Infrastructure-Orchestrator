@@ -15,4 +15,8 @@ repositories {
 dependencies {
     api(project(":shared:backend"))
     api(project(":shared:tracing"))
+
+    testImplementation(platform("org.junit:junit-bom:5.10.5"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
 }
