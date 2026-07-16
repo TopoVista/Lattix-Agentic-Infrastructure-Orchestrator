@@ -1,0 +1,7 @@
+module: lattix_cloud_controllers.providers.StubProviderAdapter
+provider: gcp
+status: contract-only
+actions:
+  - validate
+  - plan
+  - monitor

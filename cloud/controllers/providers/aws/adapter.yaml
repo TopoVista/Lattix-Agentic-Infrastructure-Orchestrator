@@ -1,0 +1,12 @@
+module: lattix_cloud_controllers.providers.AwsProviderAdapter
+status: implemented-local-simulation
+actions:
+  - provision
+  - deploy
+  - scale
+  - restart
+  - rollback
+  - delete
+  - monitor
+  - repair
+  - policy-change
