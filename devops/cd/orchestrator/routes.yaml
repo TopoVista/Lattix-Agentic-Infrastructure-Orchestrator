@@ -1,0 +1,8 @@
+service: lattix_cicd_platform.serving.CicdFacade
+routes:
+  - method: GET
+    path: /health
+  - method: POST
+    path: /pipeline-runs
+  - method: POST
+    path: /pipeline-runs/{run_id}/execute

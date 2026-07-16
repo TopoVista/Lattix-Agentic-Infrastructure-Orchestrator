@@ -1,0 +1,8 @@
+architecture: redis-cluster
+nodesEnv: REDIS_CLUSTER_NODES
+policies:
+  ttlEnv: CACHE_DEFAULT_TTL_SECONDS
+  jitterEnv: CACHE_TTL_JITTER_PERCENT
+  lockTtlEnv: CACHE_LOCK_TTL_SECONDS
+  failOpenEnv: CACHE_FAIL_OPEN_ENABLED
+warmupEnv: CACHE_WARMUP_ENABLED

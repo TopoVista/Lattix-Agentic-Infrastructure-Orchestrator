@@ -1,0 +1,6 @@
+module: lattix_cicd_platform.service.CicdPlatformService.promote_or_rollback
+automaticTriggers:
+  - smoke_failure
+  - error_rate
+  - latency_regression
+fallback: previous_revision
