@@ -1,0 +1,8 @@
+module: lattix_cloud_controllers.service.CloudControllerService.repair_resource
+strategies:
+  restart: restart unhealthy workload
+  scale: adjust replicas or desired count
+  rollback: return to previous revision
+  recreate: run provider-specific repair workflow
+requiresPlan: true
+requiresAudit: true

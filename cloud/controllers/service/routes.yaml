@@ -1,0 +1,12 @@
+service: lattix_cloud_controllers.serving.CloudControllerFacade
+routes:
+  - method: GET
+    path: /health
+  - method: GET
+    path: /providers/{provider}/capabilities
+  - method: POST
+    path: /actions/validate
+  - method: POST
+    path: /actions/plan
+  - method: POST
+    path: /actions/{plan_id}/execute

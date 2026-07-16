@@ -1,0 +1,12 @@
+module: lattix_traffic_control.service.TrafficControlService.cdn_rule_for_path
+distributionEnv: CDN_DISTRIBUTION_ID
+cacheable:
+  - /_next/*
+  - /assets/*
+  - /docs/static/*
+  - /api/public/metadata*
+neverCache:
+  - /api/auth/*
+  - /api/workspaces/*
+  - /api/cloud/*
+  - /api/chat/*

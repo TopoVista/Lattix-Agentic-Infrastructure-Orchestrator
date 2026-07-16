@@ -1,0 +1,9 @@
+module: lattix_cloud_controllers.service.CloudControllerService.reconcile_resource
+compares:
+  - status
+  - tags
+  - configuration
+outputs:
+  - drift
+  - risk
+  - recommendedActions
