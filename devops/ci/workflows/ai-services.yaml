@@ -1,0 +1,9 @@
+name: lattix-ai-services-ci
+provider: github-actions
+stages:
+  - static-analysis
+  - unit-tests
+  - integration-tests
+  - model-contract-check
+  - ai-review
+  - build

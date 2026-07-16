@@ -1,0 +1,6 @@
+name: lattix-docs-ci
+provider: github-actions
+stages:
+  - markdown-lint
+  - link-check
+  - ai-review

@@ -1,0 +1,9 @@
+name: lattix-backend-ci
+provider: github-actions
+stages:
+  - static-analysis
+  - unit-tests
+  - integration-tests
+  - ai-review
+  - build
+  - container-scan

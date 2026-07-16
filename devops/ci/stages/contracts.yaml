@@ -1,0 +1,17 @@
+package: lattix_cicd_platform.models
+contracts:
+  - PipelineRun
+  - PipelineStage
+  - StageResult
+stageTypes:
+  - static-analysis
+  - unit-tests
+  - integration-tests
+  - ai-review
+  - container-scan
+  - performance-test
+  - build
+  - registry-push
+  - deploy
+  - smoke-test
+  - promotion

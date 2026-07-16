@@ -1,0 +1,11 @@
+name: lattix-frontend-ci
+provider: github-actions
+stages:
+  - static-analysis
+  - unit-tests
+  - ai-review
+  - build
+  - container-scan
+artifacts:
+  - test-results
+  - sbom
