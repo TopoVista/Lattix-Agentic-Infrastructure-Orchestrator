@@ -2,7 +2,6 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { RepositoryDetail } from "./repository-detail";
-import { dashboard } from "@/lib/mock-data";
 
 vi.mock("@monaco-editor/react", () => ({
   default: ({ value, onChange }: { value?: string; onChange?: (value: string) => void }) => (
@@ -16,7 +15,7 @@ vi.mock("@monaco-editor/react", () => ({
 
 describe("RepositoryDetail", () => {
   it("renders the editor workspace with analysis panels", async () => {
-    render(<RepositoryDetail dashboard={dashboard} view="editor" />);
+    render(<RepositoryDetail view="editor" />);
 
     expect(screen.getByText("Editor")).toBeInTheDocument();
     expect(await screen.findByText("Code editor")).toBeInTheDocument();
