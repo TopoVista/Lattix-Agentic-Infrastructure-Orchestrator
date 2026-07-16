@@ -29,6 +29,9 @@ importers:
 
   frontend/apps/web:
     dependencies:
+      '@lattix/ai-contracts':
+        specifier: workspace:*
+        version: link:../../../shared/ai-contracts
       '@lattix/code-intelligence':
         specifier: workspace:*
         version: link:../../../shared/code-intelligence
@@ -99,6 +102,8 @@ importers:
       vitest:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@24.13.2)(jsdom@26.1.0)
+
+  shared/ai-contracts: {}
 
   shared/code-intelligence: {}
 
