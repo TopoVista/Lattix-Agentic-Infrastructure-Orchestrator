@@ -1,0 +1,18 @@
+module: lattix_cloud_controllers.policies.validate_policy
+requiredTags:
+  - project
+  - environment
+  - owner
+  - cost_center
+  - data_class
+approvalRequired:
+  - production-impact
+  - destructive-action
+  - restricted-data-class
+  - high-cost-impact
+dryRunRequired:
+  - provision
+  - scale
+  - delete
+  - rollback
+  - policy-change
