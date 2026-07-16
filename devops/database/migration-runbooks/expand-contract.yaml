@@ -1,0 +1,8 @@
+pattern: expand-contract
+steps:
+  - expand schema safely
+  - backfill with checkpoints
+  - dual-write behind feature flag
+  - validate reads and counts
+  - cutover
+  - cleanup after rollback window

@@ -1,0 +1,7 @@
+schedule: daily
+isolatedEnvironment: restore-validation
+databases:
+  - postgres
+  - clickhouse
+  - neo4j
+  - qdrant

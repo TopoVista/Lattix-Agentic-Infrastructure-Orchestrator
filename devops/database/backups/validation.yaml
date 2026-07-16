@@ -1,0 +1,8 @@
+package: lattix_database_scaling
+function: validate_backup_restore
+checks:
+  - object-readable
+  - schema-version
+  - row-count-sample
+  - integrity-check
+enabledEnv: BACKUP_RESTORE_TEST_ENABLED

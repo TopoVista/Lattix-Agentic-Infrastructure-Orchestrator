@@ -1,0 +1,8 @@
+name: lattix-infrastructure-ci
+provider: github-actions
+stages:
+  - terraform-format
+  - terraform-validate
+  - policy-check
+  - plan
+  - ai-review
