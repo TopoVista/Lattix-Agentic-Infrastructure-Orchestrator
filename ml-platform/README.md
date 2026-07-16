@@ -1,42 +1,115 @@
-# ML Platform
+# ML Platform — Developer Guide
 
-## Purpose
+> Predictive models, MLflow experiment tracking, training pipelines, evaluation, and serving.
 
-Contains ML training, evaluation, model registry, serving, monitoring, prediction, and drift detection assets.
+## Overview (Phase 21)
 
-## Owner Type
+The ML Platform manages the complete ML lifecycle: data preparation, training, evaluation, registry, and serving.
 
-ML platform engineering.
+## Model Registry
 
-## Conventions
+All models are registered in MLflow and tracked by name, version, and stage.
 
-- Python packages use `lattix_ml_<module>`.
-- Models must include model cards, dataset lineage, evaluation metrics, and owner metadata.
-- Online predictions must include model version and trace context.
-- Production model promotion requires explicit approval and monitoring.
+### Registered Models
 
-## Implemented Package
+| Model | Framework | Stage | Use Case |
+|-------|-----------|-------|---------|
+| `code-quality-classifier` | PyTorch | Production | Detect code quality issues |
+| `infra-anomaly-detector` | scikit-learn | Production | Detect infrastructure anomalies |
+| `cost-forecaster` | Prophet | Production | Predict monthly costs |
+| `incident-classifier` | HuggingFace | Staging | Classify incident severity |
+| `pr-review-ranker` | PyTorch | Production | Rank PR changes by risk |
 
-`lattix_ml_platform` implements the Phase 21 platform surface:
+### Python Usage
 
-- `MLPlatformService.train_model` loads features, trains deterministic baseline models, evaluates metrics, creates model cards, logs MLflow-style artifact URIs, and registers candidates.
-- `ModelRegistry` stores versions, artifacts, lineage, promotion gates, approval state, and active stages.
-- `ModelServingFacade` exposes health, model metadata, prediction, batch prediction, feedback, and Prometheus metrics contracts.
-- `monitor_model` reports latency, errors, data drift, prediction drift, outcome quality, data quality failures, and retraining triggers.
-- `build_retraining_dag_template` emits Airflow DAG source for scheduled or triggered retraining.
+```python
+import mlflow
+from lattix_ml_platform import ModelRegistry, TrainingPipeline, ModelServer
 
-## Environment Variables
+# --- Experiment Tracking ---
+mlflow.set_tracking_uri("http://localhost:5000")
+mlflow.set_experiment("code-quality-classifier")
 
-- `MLFLOW_TRACKING_URI`
-- `MLFLOW_ARTIFACT_BUCKET`
-- `MODEL_SERVING_PORT`
-- `FEATURE_STORE_OFFLINE_URL`
-- `FEATURE_STORE_ONLINE_URL`
-- `MODEL_REGISTRY_APPROVAL_REQUIRED`
-- `MODEL_DEFAULT_DEVICE`
+with mlflow.start_run():
+    mlflow.log_param("learning_rate", 1e-4)
+    mlflow.log_param("epochs", 50)
+    mlflow.log_param("batch_size", 32)
+    
+    # ... training loop ...
+    
+    mlflow.log_metric("accuracy", 0.942)
+    mlflow.log_metric("f1_score", 0.937)
+    mlflow.pytorch.log_model(model, "model")
 
-## Future Phase Dependencies
+# --- Model Registry ---
+registry = ModelRegistry()
 
-- Phase 20 provides data engineering and feature foundations.
-- Phase 21 implements ML platform capabilities.
-- Phase 38 consumes ML outputs for cost forecasting and anomaly detection.
+# Register a new version
+version = registry.register(
+    model_name="code-quality-classifier",
+    run_id="abc123",
+    description="Retrained on 2026 codebase"
+)
+
+# Promote to production
+registry.transition(
+    model_name="code-quality-classifier",
+    version=version,
+    stage="Production"
+)
+
+# --- Serving ---
+server = ModelServer()
+prediction = server.predict(
+    model_name="code-quality-classifier",
+    input_data={
+        "code_snippet": "function foo() { var x = 1; return x; }",
+        "language": "javascript"
+    }
+)
+print(f"Quality score: {prediction.score}")
+print(f"Issues: {prediction.issues}")
+```
+
+## Training Pipelines
+
+```python
+from lattix_ml_platform import TrainingPipeline
+
+pipeline = TrainingPipeline(
+    name="code-quality-retrain",
+    model="code-quality-classifier",
+    data_source="feature-store:code-quality-features",
+    schedule="0 2 * * 1"  # Weekly Mondays at 2am
+)
+
+# Run manually
+result = pipeline.run()
+print(f"New accuracy: {result.metrics['accuracy']}")
+print(f"Promoted: {result.promoted_to_production}")
+```
+
+## Evaluation Framework
+
+```python
+from lattix_ml_platform import ModelEvaluator
+
+evaluator = ModelEvaluator()
+
+report = evaluator.evaluate(
+    model_name="code-quality-classifier",
+    test_dataset="code-quality-test-2026",
+    metrics=["accuracy", "precision", "recall", "f1", "latency_p99"]
+)
+
+print(f"Accuracy: {report.accuracy:.3f}")
+print(f"P99 latency: {report.latency_p99_ms}ms")
+print(f"Regression detected: {report.has_regression}")
+```
+
+## Service URLs (full stack)
+
+| Service | URL | Purpose |
+|---------|-----|---------|
+| MLflow UI | http://localhost:5000 | Experiment tracking |
+| Model Server | http://localhost:8095 | Serving API |

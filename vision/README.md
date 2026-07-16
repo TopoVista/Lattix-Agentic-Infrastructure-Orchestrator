@@ -1,40 +1,106 @@
-# Vision
+# Computer Vision — Developer Guide
 
-## Purpose
+> Diagram understanding, screenshot analysis, OCR, whiteboard digitization, and UI-to-code conversion.
 
-Contains computer vision services for OCR, architecture diagrams, whiteboards, UI screenshots, infrastructure diagrams, Kubernetes diagrams, and screen analysis.
+## Overview (Phase 22)
 
-## Owner Type
+The Vision module uses OpenCV, YOLO, and Detectron2 to understand architectural diagrams, screenshots, whiteboards, and UI mockups.
 
-AI platform engineering.
+## Capabilities
 
-## Conventions
+### 1. Architecture Diagram Parser
 
-- Python packages use `lattix_vision`.
-- Generated Terraform, Kubernetes, or React outputs are proposals only.
-- Low-confidence extraction requires human review.
-- Image assets must follow workspace access and retention policies.
+Converts PNG/SVG architecture diagrams into a component graph JSON.
 
-## Implemented Package
+```python
+from lattix_vision import DiagramParser
 
-`lattix_vision` implements the Phase 22 computer vision surface:
+parser = DiagramParser()
 
-- `VisionService.ingest_image` stores image assets, object refs, checksums, metadata, and workspace links.
-- `preprocess_image`, `run_ocr`, and `classify_visual` create normalized image metadata, OCR blocks, and routing decisions.
-- `extract_diagram_graph` emits diagram nodes, edges, groups, labels, confidence, review status, and knowledge graph facts.
-- `generate_react_proposal`, `generate_terraform_proposal`, and `reconstruct_kubernetes_topology` create proposal-only artifacts with review gates.
-- `understand_whiteboard`, `review_artifact`, and `export_diagram_facts` support human review and downstream knowledge export.
+# Parse a system architecture diagram
+result = parser.parse("docs/architecture/system-context.png")
 
-## Environment Variables
+print(f"Detected components: {len(result.components)}")
+for comp in result.components:
+    print(f"  {comp.label} ({comp.type}) at ({comp.x}, {comp.y})")
 
-- `VISION_MODEL_DIR`
-- `VISION_UPLOAD_BUCKET`
-- `OCR_ENGINE`
-- `VISION_MIN_CONFIDENCE`
-- `VISION_MAX_IMAGE_MB`
-- `VISION_REVIEW_REQUIRED_BELOW_CONFIDENCE`
+print(f"Detected connections: {len(result.connections)}")
+for conn in result.connections:
+    print(f"  {conn.source} → {conn.target} [{conn.label}]")
 
-## Future Phase Dependencies
+# Export as JSON
+result.to_json("output/diagram-graph.json")
 
-- Phase 22 implements computer vision workflows.
-- Phase 14 and Phase 27 consume reviewed visual facts.
+# Export as Mermaid
+print(result.to_mermaid())
+```
+
+### 2. Screenshot → UI Code
+
+Converts a screenshot of a UI into React or HTML code.
+
+```python
+from lattix_vision import UICodeGenerator
+
+generator = UICodeGenerator()
+
+code = generator.from_screenshot(
+    image_path="screenshots/dashboard.png",
+    target_framework="react",  # or "html", "vue", "svelte"
+    style="tailwind"           # or "css", "styled-components"
+)
+
+print(code.component_code)
+print(f"Confidence: {code.confidence:.0%}")
+```
+
+### 3. OCR Document Extraction
+
+Extracts structured text from PDFs and images.
+
+```python
+from lattix_vision import OCRExtractor
+
+ocr = OCRExtractor()
+
+# Extract from PDF
+result = ocr.extract("docs/requirements/prd.pdf")
+print(f"Pages: {result.page_count}")
+print(f"Text: {result.full_text[:500]}")
+print(f"Tables: {len(result.tables)}")
+
+# Extract structured data
+for table in result.tables:
+    print(table.to_dataframe())
+```
+
+### 4. Whiteboard Digitizer
+
+Converts a whiteboard photo into a clean diagram.
+
+```python
+from lattix_vision import WhiteboardDigitizer
+
+wb = WhiteboardDigitizer()
+result = wb.digitize("photos/whiteboard-session.jpg")
+
+print(result.mermaid_diagram)
+print(f"Detected shapes: {result.shape_count}")
+print(f"Detected text: {result.text_regions}")
+```
+
+## Running Tests
+
+```bash
+python -m pytest vision/ -v
+```
+
+## Dependencies
+
+```
+OpenCV 4.x          - Image processing
+YOLO v8             - Object detection
+Detectron2          - Instance segmentation
+pytesseract         - OCR engine
+Pillow              - Image manipulation
+```
