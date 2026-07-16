@@ -1,45 +1,104 @@
-# Observability
+# Observability — Developer Guide
 
-## Purpose
+> OpenTelemetry-based metrics, structured logs, distributed traces, alert rules, and Grafana dashboards.
 
-Contains telemetry standards, OpenTelemetry collector configs, metrics, logs, traces, dashboards, alerts, SLOs, and operational exports.
+## Overview (Phase 26)
 
-## Owner Type
+Every service emits OTel spans, metrics, and structured logs. Data flows through the collector pipeline to Prometheus (metrics), Loki (logs), Tempo (traces), and Grafana (dashboards).
 
-SRE and platform engineering.
+## Architecture
 
-## Conventions
+```
+Services → OTel Collector → Prometheus (metrics)
+                          → Loki (logs)
+                          → Tempo / Jaeger (traces)
+                          → Grafana (dashboards)
+```
 
-- Every service and agent should emit metrics, logs, traces, and audit-relevant context.
-- Logs must be structured and redacted.
-- Dashboards should map to SLOs, runbooks, or operational decisions.
-- High-cardinality labels require review.
+## Python SDK Usage
 
-## Implemented Package
+```python
+from lattix_observability import ObservabilityClient
 
-`observability/lattix_observability` implements the Phase 26 surface:
+obs = ObservabilityClient(service_name="my-service", service_version="1.0.0")
 
-- `propagate_trace` adds trace, correlation, actor, workspace, task, and request context to downstream HTTP or event calls.
-- `record_platform_metric` standardizes metric names, required labels, high-cardinality warnings, units, and timestamps.
-- `create_structured_log` emits structured JSON-ready logs with recursive redaction.
-- `evaluate_alert_rule` evaluates simple metric window expressions and returns state, severity, routing, and evidence.
-- `compute_slo_report` calculates availability, latency p95, error budget, burn rate, and compliance.
-- `define_dashboard` validates dashboard definitions, and `export_observability_summary` emits facts for analytics, knowledge graph, memory, ML, and digital twin.
+# --- Metrics ---
+counter = obs.counter("http_requests_total", labels={"method": "POST", "endpoint": "/api/agents"})
+counter.increment()
 
-## Environment Variables
+histogram = obs.histogram("request_duration_ms", buckets=[10, 50, 100, 250, 500, 1000])
+with histogram.time():
+    do_something()
 
-- `OTEL_EXPORTER_OTLP_ENDPOINT`
-- `OTEL_SERVICE_NAME`
-- `PROMETHEUS_SCRAPE_INTERVAL`
-- `LOKI_URL`
-- `JAEGER_ENDPOINT`
-- `TEMPO_ENDPOINT`
-- `GRAFANA_URL`
-- `ALERTMANAGER_URL`
-- `LOG_REDACTION_ENABLED`
+gauge = obs.gauge("active_connections")
+gauge.set(42)
 
-## Future Phase Dependencies
+# --- Traces ---
+with obs.span("process-request") as span:
+    span.set_attribute("user.id", "owner@lattix.io")
+    span.set_attribute("repo.id", "repo-platform")
+    
+    with obs.span("db-query") as db_span:
+        db_span.set_attribute("db.statement", "SELECT * FROM tasks")
+        result = db.execute(...)
 
-- Phase 26 implements observability.
-- Phase 37 uses telemetry for benchmarks.
-- Phase 40 uses telemetry for production readiness.
+# --- Structured Logs ---
+obs.info("Task created", task_id="task-441", user="owner@lattix.io")
+obs.warn("Consumer lag elevated", topic="events", lag=124, threshold=100)
+obs.error("Model inference timeout", model="code-quality-classifier", timeout_ms=5000)
+```
+
+## Alert Rules
+
+Alert definitions live in `observability/alerts/`:
+
+```yaml
+# observability/alerts/kafka-alerts.yaml
+- alert: KafkaConsumerLagHigh
+  expr: kafka_consumer_group_lag_sum > 100
+  for: 5m
+  labels:
+    severity: warning
+  annotations:
+    summary: "Consumer lag elevated"
+    description: "Topic {{ $labels.topic }} lag is {{ $value }}"
+```
+
+## Dashboards
+
+Grafana dashboards are in `observability/dashboards/`:
+- `platform-overview.json` — High-level health
+- `ai-platform.json` — Agent runtime, model inference
+- `infrastructure.json` — Kubernetes, pods, resources
+- `kafka.json` — Kafka broker and consumer metrics
+
+## SLOs
+
+Service Level Objectives in `observability/slos/`:
+
+```yaml
+# API availability SLO: 99.9% uptime over 30 days
+- name: api-availability
+  service: api-gateway
+  target: 99.9
+  window: 30d
+  indicator:
+    type: availability
+    good_event: http_request_success_total
+    total_event: http_requests_total
+```
+
+## Running Tests
+
+```bash
+python -m pytest tests/test_observability.py -v
+```
+
+## Service URLs (when running full stack)
+
+| Service | URL | Purpose |
+|---------|-----|---------|
+| Grafana | http://localhost:3000 | Dashboards (admin/admin) |
+| Prometheus | http://localhost:9090 | Query metrics |
+| Jaeger | http://localhost:16686 | Trace explorer |
+| AlertManager | http://localhost:9093 | Alert routing |

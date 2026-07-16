@@ -1,24 +1,87 @@
-# AI Platform
+# AI Platform — Developer Guide
 
-## Purpose
+> Python AI services for repository intelligence, code completion, and intelligent chatbot pipeline.
 
-Hosts AI services for repository intelligence, code analysis, code completion, chat pipeline, retrieval, reasoning, verification, and AI evaluation.
+## Modules
 
-## Owner Type
+### Repository Intelligence (Phase 12)
+```
+ai-platform/repository-intelligence/
+```
+Indexes codebases into structural graphs for AI consumption.
 
-AI platform engineering.
+**Usage:**
+```python
+from lattix_ai_repository_intelligence import RepositoryIntelligenceService
 
-## Conventions
+svc = RepositoryIntelligenceService()
 
-- Python packages use `lattix_ai_<module>`.
-- AI services must use evidence retrieval and policy checks before generating answers or action proposals.
-- Repository and document content is untrusted input.
-- Prompts must not include raw secrets.
-- Long-running jobs should be event-driven and observable.
+# Index a repository
+result = svc.index_repository(repo_path="./", branch="main")
+print(f"Indexed {result.file_count} files, {result.symbol_count} symbols")
 
-## Future Phase Dependencies
+# Query the structural graph
+symbols = svc.query_symbols(query="WorkspaceShell", repo_id="repo-platform")
+for s in symbols:
+    print(f"{s.kind}: {s.name} at {s.file}:{s.line}")
+```
 
-- Phase 12 builds repository intelligence.
-- Phase 13 builds code completion.
-- Phase 18 builds the intelligent chatbot pipeline.
-- Phase 21 integrates ML platform capabilities.
+### Code Completion Engine (Phase 13)
+```
+ai-platform/code-completion/
+```
+Repository-aware generation for code, tests, APIs, events, and configs.
+
+**Usage:**
+```python
+from lattix_code_completion import CodeCompletionEngine
+
+engine = CodeCompletionEngine()
+
+# Generate code completion
+result = engine.complete(
+    file_path="src/components/MyComponent.tsx",
+    cursor_position=42,
+    context_window=1024,
+    repository_id="repo-platform"
+)
+print(result.completion)
+
+# Generate a test
+test = engine.generate_test(
+    source_file="src/lib/store.ts",
+    function_name="addTask",
+    test_framework="vitest"
+)
+print(test.code)
+```
+
+### Chat Pipeline (Phase 18)
+```
+ai-platform/chat-pipeline/
+```
+Intent → planning → retrieval → reasoning → verification → fact-checking pipeline.
+
+**Usage:**
+```python
+from lattix_chat_pipeline import ChatPipelineService
+
+pipeline = ChatPipelineService()
+
+# Process a user message
+response = pipeline.process(
+    message="What are the recent incidents in the auth service?",
+    context={"workspace_id": "ws-lattix", "user_id": "owner@lattix.io"}
+)
+
+print(f"Intent: {response.intent}")
+print(f"Answer: {response.answer}")
+print(f"Confidence: {response.confidence}")
+print(f"Sources: {response.sources}")
+```
+
+## Running Tests
+
+```bash
+python -m pytest ai-platform/ -v
+```
