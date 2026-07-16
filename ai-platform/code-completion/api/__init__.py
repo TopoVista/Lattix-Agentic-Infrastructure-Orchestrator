@@ -1,0 +1,1 @@
+from lattix_code_completion.models import CompletionRequest, CodeProposal

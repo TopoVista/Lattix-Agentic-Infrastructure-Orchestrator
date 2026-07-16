@@ -1,0 +1,1 @@
+from lattix_code_completion.context import build_completion_context
