@@ -1,0 +1,11 @@
+module: lattix_cicd_platform.service.CicdPlatformService.choose_deployment_strategy
+strategies:
+  - rolling
+  - canary
+  - blue-green
+  - manual
+gates:
+  - smoke-tests
+  - metrics
+  - approvals
+  - rollback-policy

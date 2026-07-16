@@ -1,0 +1,7 @@
+stage: smoke-test
+requiredForPromotion: true
+checks:
+  - health-endpoint
+  - read-path
+  - dependency-status
+failureAction: rollback
