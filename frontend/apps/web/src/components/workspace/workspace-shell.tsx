@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { ActivitySquare, FileSearch, GitBranch, LayoutDashboard, MenuSquare, MessageSquareMore, Bell, CheckSquare, Terminal } from "lucide-react";
+import { ActivitySquare, FileSearch, GitBranch, LayoutDashboard, MenuSquare, MessageSquareMore, Bell, CheckSquare, Terminal, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWorkspaceStore } from "@/lib/store";
 import { AccountSwitcher } from "./account-switcher";
@@ -16,6 +16,18 @@ const NAV_ITEMS = [
   { href: "/repositories/repo-platform?view=docs", label: "Docs", icon: MessageSquareMore },
   { href: "/repositories/repo-platform?view=notifications", label: "Notifications", icon: Bell },
   { href: "/repositories/repo-platform?view=tasks", label: "Tasks", icon: CheckSquare },
+];
+
+const PLATFORM_NAV_ITEMS = [
+  { href: "/platform", label: "Phase Overview", icon: Rocket },
+  { href: "/platform/ai", label: "AI Core (P10–19)", icon: Rocket },
+  { href: "/platform/infrastructure", label: "Infrastructure", icon: Rocket },
+  { href: "/platform/observability", label: "Observability", icon: Rocket },
+  { href: "/platform/digital-twin", label: "Digital Twin", icon: Rocket },
+  { href: "/platform/data", label: "Data & ML", icon: Rocket },
+  { href: "/platform/reliability", label: "Reliability", icon: Rocket },
+  { href: "/platform/security", label: "Security", icon: Rocket },
+  { href: "/platform/enterprise", label: "Enterprise", icon: Rocket },
 ];
 
 export function WorkspaceShell({ children }: { children: React.ReactNode }) {
@@ -60,7 +72,7 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
       {/* Layout */}
       <div className="grid min-h-[calc(100vh-57px)] grid-cols-[240px_1fr]">
         {/* Sidebar */}
-        <aside className="border-r border-line bg-[#0c1224] p-3">
+        <aside className="border-r border-line bg-[#0c1224] p-3 overflow-y-auto">
           <nav className="space-y-1">
             {NAV_ITEMS.map((item) => {
               const view = item.href.includes("view=") ? item.href.split("view=")[1] : "files";
@@ -97,6 +109,29 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
+
+          {/* Platform Portal section */}
+          <div className="mt-4">
+            <div className="mb-1.5 px-3 text-[10px] uppercase tracking-[0.2em] text-muted/60 flex items-center gap-1.5">
+              <Rocket className="size-3" /> Platform Portal
+            </div>
+            <nav className="space-y-0.5">
+              {PLATFORM_NAV_ITEMS.map((item) => {
+                const active = pathname === item.href || (item.href !== "/platform" && pathname.startsWith(item.href));
+                const Icon = item.icon;
+                return (
+                  <a key={item.href} href={item.href}
+                    className={cn(
+                      "flex items-center gap-2 rounded-md border border-transparent px-3 py-1.5 text-xs text-muted hover:border-line hover:bg-panelSoft hover:text-text",
+                      active && "border-accent/30 bg-panelSoft text-accent"
+                    )}>
+                    <Icon className="size-3.5" />
+                    {item.label}
+                  </a>
+                );
+              })}
+            </nav>
+          </div>
 
           {/* Workspace health */}
           <div className="mt-4 rounded-lg border border-line bg-panel p-3">
