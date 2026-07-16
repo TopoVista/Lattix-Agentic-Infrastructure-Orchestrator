@@ -1,0 +1,10 @@
+events:
+  - cloud.action.validated
+  - cloud.action.planned
+  - cloud.action.executed
+  - cloud.resource.reconciled
+sinks:
+  - audit-log
+  - kafka
+  - digital-twin
+  - observability
